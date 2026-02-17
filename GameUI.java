@@ -4,31 +4,50 @@ import javax.swing.*;
 public class GameUI {
     private JFrame frame;
     private GameLogic logic;
+    private CardLayout cardLayout; // ตัวควบคุมการสลับหน้า
+    private JPanel mainContainer; // ตู้คอนเทนเนอร์เก็บทุกหน้าจอ
 
     public GameUI(GameLogic logic) {
-        this.logic = logic; // รับ logic เข้ามาใช้งานในคลาส
+        this.logic = logic; // เก็บค่า logic ไว้ใช้งานในคลาส
         initWindow();
     }
 
     private void initWindow() {
-        // --- ตั้งค่า Window หลัก ---
-        frame = new JFrame("FirstLove - เกมจีบหนุ่ม");
+        // --- 1. ตั้งค่า Window หลัก ---
+        frame = new JFrame("FirstLove - เกมจีบหนุ่มในโรงเรียน");
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
-        JLayeredPane layeredPane = new JLayeredPane();
+        // ใช้ CardLayout เพื่อจัดการการสลับหน้าจอ Menu และ Gameplay
+        cardLayout = new CardLayout();
+        mainContainer = new JPanel(cardLayout);
 
-        // --- 1. Background Image (ชั้น DEFAULT_LAYER) ---
+        // สร้างหน้าจอต่างๆ
+        JPanel menuPanel = createMenuPanel();
+        JPanel gameplayPanel = createGameplayPanel();
+
+        // เพิ่มหน้าจอลงใน CardLayout โดยตั้งชื่อกำกับไว้
+        mainContainer.add(menuPanel, "MENU");
+        mainContainer.add(gameplayPanel, "GAMEPLAY");
+
+        frame.add(mainContainer);
+    }
+
+    // --- 2. หน้าจอเมนู (Menu Panel) ---
+    private JPanel createMenuPanel() {
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(800, 600));
+
+        // ส่วน Background (ใช้ JLabel ใส่รูปภาพ)
         ImageIcon bgIcon = new ImageIcon("res/school_bg.jpg");
         Image img = bgIcon.getImage();
-        // ปรับขนาดรูปให้พอดีกับหน้าจอ 800x600 เสมอ
         Image scaledImg = img.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
         JLabel backgroundLabel = new JLabel(new ImageIcon(scaledImg));
         backgroundLabel.setBounds(0, 0, 800, 600);
 
-        // --- 2. Game Title (Centered with Shadow ในชั้น PALETTE_LAYER) ---
+        // ส่วนของชื่อเกม (Game Title) พร้อม Shadow
         JLabel titleLabel = new JLabel("First Love", SwingConstants.CENTER) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -47,52 +66,69 @@ public class GameUI {
         titleLabel.setFont(new Font("Tahoma", Font.BOLD, 80));
         titleLabel.setBounds(0, 50, 800, 150);
 
-        // --- 3. Menu Panel (ปุ่มกดในชั้น PALETTE_LAYER) ---
-        JPanel menuPanel = new JPanel(new GridBagLayout());
-        menuPanel.setOpaque(false); // ทำให้โปร่งแสงเพื่อมองเห็นพื้นหลัง
-        menuPanel.setBounds(0, 0, 800, 600);
+        // ส่วนของปุ่มกด (Menu Buttons)
+        JPanel buttonsPanel = new JPanel(new GridBagLayout());
+        buttonsPanel.setOpaque(false);
+        buttonsPanel.setBounds(0, 0, 800, 600);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new java.awt.Insets(220, 0, 10, 0); // ดันปุ่มลงมาเพื่อหลบชื่อเกม
-
+        
+        // ปุ่ม START GAME
         JButton startBtn = new JButton("START GAME");
-        JButton settingsBtn = new JButton("SETTINGS");
-        JButton exitBtn = new JButton("EXIT");
-
         styleButton(startBtn);
-        styleButton(settingsBtn);
-        styleButton(exitBtn);
-
-        // การจัดการ Action ปุ่มต่างๆ
         startBtn.addActionListener(e -> {
-            JOptionPane.showMessageDialog(frame, "กำลังพาคุณไปพบกับ 'รุ่นพี่คิน'...");
+            cardLayout.show(mainContainer, "GAMEPLAY"); // สลับไปหน้าเล่นเกม
             logic.addScore(0);
         });
+        gbc.insets = new Insets(220, 0, 10, 0); // ดันปุ่มแรกลงมาหลบชื่อเกม
+        buttonsPanel.add(startBtn, gbc);
 
+        // ปุ่ม SETTINGS
+        JButton settingsBtn = new JButton("SETTINGS");
+        styleButton(settingsBtn);
+        settingsBtn.addActionListener(e -> {
+            JOptionPane.showMessageDialog(frame, "ระบบตั้งค่ากำลังพัฒนา...");
+        });
+        gbc.gridy = 1;
+        gbc.insets = new Insets(10, 0, 10, 0);
+        buttonsPanel.add(settingsBtn, gbc);
+
+        // ปุ่ม EXIT
+        JButton exitBtn = new JButton("EXIT");
+        styleButton(exitBtn);
         exitBtn.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(frame, "ออกจากเกม?", "Exit", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) System.exit(0);
         });
-
-        // เพิ่มปุ่มลงใน Layout
-        menuPanel.add(startBtn, gbc);
-        gbc.gridy = 1;
-        gbc.insets = new java.awt.Insets(10, 0, 10, 0);
-        menuPanel.add(settingsBtn, gbc);
         gbc.gridy = 2;
-        menuPanel.add(exitBtn, gbc);
+        buttonsPanel.add(exitBtn, gbc);
 
         // รวมทุกลำดับ Layer เข้าด้วยกัน
         layeredPane.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(titleLabel, JLayeredPane.PALETTE_LAYER);
-        layeredPane.add(menuPanel, JLayeredPane.PALETTE_LAYER);
+        layeredPane.add(buttonsPanel, JLayeredPane.PALETTE_LAYER);
 
-        frame.add(layeredPane);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(layeredPane);
+        return panel;
     }
 
-    // ส่วนตกแต่งปุ่มให้ดูสวยงามและไม่ซ้ำใคร
+    // --- 3. หน้าจอ Gameplay (ฉากที่ 1: กุญแจตก) ---
+    private JPanel createGameplayPanel() {
+        JPanel panel = new JPanel(null);
+        
+        // ตัวอย่างข้อความในฉากแรก
+        JLabel label = new JLabel("ฉากที่ 1: หน้าหอพัก (กุญแจตก)", SwingConstants.CENTER);
+        label.setBounds(0, 200, 800, 50);
+        label.setFont(new Font("Tahoma", Font.BOLD, 24));
+        
+        panel.add(label);
+        return panel;
+    }
+
+    // ส่วนตกแต่งปุ่มให้ดูสวยงาม
     private void styleButton(JButton btn) {
         btn.setPreferredSize(new Dimension(200, 50));
         btn.setFont(new Font("Tahoma", Font.BOLD, 18));
