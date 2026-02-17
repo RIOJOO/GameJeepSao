@@ -14,7 +14,7 @@ public class GameUI {
 
     private void initWindow() {
         // --- 1. ตั้งค่า Window หลัก ---
-        frame = new JFrame("FirstLove - เกมจีบหนุ่มในโรงเรียน");
+        frame = new JFrame("FirstLove - เกมจีบสาว");
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -58,7 +58,7 @@ public class GameUI {
                 int y = 70;
                 
                 g2.setColor(Color.WHITE); // วาดเงาสีขาว
-                g2.drawString(getText(), x + 3, y + 3); 
+                g2.drawString(getText(), x + 3, y + 3);
                 g2.setColor(new Color(255, 105, 180)); // วาดตัวหนังสือจริงสีชมพู
                 g2.drawString(getText(), x, y);
             }
@@ -95,6 +95,15 @@ public class GameUI {
         gbc.insets = new Insets(10, 0, 10, 0);
         buttonsPanel.add(settingsBtn, gbc);
 
+        // ปุ่ม LOAD GAME
+        JButton LoadBtn = new JButton("LOAD GAME");
+        styleButton(LoadBtn);
+        LoadBtn.addActionListener(e -> {
+            JOptionPane.showMessageDialog(frame, "ระบบโหลดเกมกำลังพัฒนา...");
+        });
+        gbc.gridy = 2;
+        buttonsPanel.add(LoadBtn, gbc);
+
         // ปุ่ม EXIT
         JButton exitBtn = new JButton("EXIT");
         styleButton(exitBtn);
@@ -102,7 +111,7 @@ public class GameUI {
             int confirm = JOptionPane.showConfirmDialog(frame, "ออกจากเกม?", "Exit", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) System.exit(0);
         });
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         buttonsPanel.add(exitBtn, gbc);
 
         // รวมทุกลำดับ Layer เข้าด้วยกัน
