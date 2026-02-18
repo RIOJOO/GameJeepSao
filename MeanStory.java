@@ -19,27 +19,27 @@ public class MeanStory {
 
         // --- รูทสนิท (Index 3) ---
         list.add(new Dialogue("คุณ", "“ นี่ครับหนังสือที่คุณต้องการ ”", "res/BGLibrary.jpg|res/Givebook.png")); // [cite: 6, 7]
-        list.add(new Dialogue("มีน", "“ ขอบคุณมากเลยค่ะพี่ ”", "res/Mean.png")); // [cite: 6, 7]
+        list.add(new Dialogue("มีน", "“ ขอบคุณมากเลยค่ะพี่ ”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 6, 7]
         
         // เปลี่ยนฉากหลังกลับเป็นห้องสมุดปกติ [cite: 8-12]
-        list.add(new Dialogue("บรรยาย", " นั่นคือจุดเริ่มต้นของความสัมพันธ์เรา ", "res/library.png"));
-        list.add(new Dialogue("มีน", "“ขอบคุณนะ ถ้าไม่ได้เธอช่วยคงลำบากเลย”", "res/Mean.png")); // [cite: 14, 19]
-        list.add(new Dialogue("มีน", "“ชอบอ่านหนังสือด้วยกันแบบนี้ มันเงียบแต่ไม่เหงาแฮะ”", "res/Mean.png")); // [cite: 21, 22]
+        list.add(new Dialogue("บรรยาย", " นั่นคือจุดเริ่มต้นของความสัมพันธ์เรา ", "res/BGLibrary.jpg"));
+        list.add(new Dialogue("มีน", "“ขอบคุณนะ ถ้าวันนั้นเราคงไม่ได้รู้จักกัน”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 14, 19]
+        list.add(new Dialogue("มีน", "“ชอบอ่านหนังสือด้วยกันแบบนี้ มันเงียบแต่ไม่เหงาแฮะ”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 21, 22]
         
         // ตัวเลือกตัดสินใจตอนจบ (Index 8)
-        list.add(new Dialogue("มีน", "“บางที...ก็อยากให้มานั่งข้าง ๆ ทุกวัน”", "res/Mean.png",
+        list.add(new Dialogue("มีน", "“บางที...ก็อยากให้มานั่งข้าง ๆ ทุกวัน”", "res/BGLibrary.jpg|res/Mean2.png",
             new String[]{"ฉันก็อยากนั่งข้างเธอตลอดไป", "มาอ่านด้วยกันบ่อยๆ นะในฐานะเพื่อน"},
             new int[]{9, 12} // [cite: 26, 34]
         ));
 
         // --- Good End (Index 9) ---
-        list.add(new Dialogue("มีน", "“เล่มนี้สนุกมาก แต่อยากอ่านไปพร้อมกันมากกว่า”", "res/Mean.png")); // [cite: 29, 30]
-        list.add(new Dialogue("บรรยาย", "มีนยื่นหนังสือที่มีลายมือเล็กๆ เขียนคั่นไว้ แล้วเธอก็นั่งข้างเราเหมือนทุกวัน", "res/Mean.png")); // [cite: 27, 28, 31, 32]
+        list.add(new Dialogue("มีน", "“เล่มนี้สนุกมาก แต่อยากอ่านไปพร้อมกันมากกว่า”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 29, 30]
+        list.add(new Dialogue("บรรยาย", "มีนยื่นหนังสือที่มีลายมือเล็กๆ เขียนคั่นไว้ แล้วเธอก็นั่งข้างเราเหมือนทุกวัน", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 27, 28, 31, 32]
         list.add(new Dialogue("SYSTEM", "--- HAPPY ENDING ---", null));
 
         // --- Friend End (Index 12) ---
-        list.add(new Dialogue("มีน", "“ขอบคุณนะที่ชอบมาอ่านด้วยกัน อยู่ด้วยแล้วสบายใจดี”", "res/Mean.png")); // [cite: 35-37]
-        list.add(new Dialogue("บรรยาย", "ความสัมพันธ์ของเรา กลายเป็นมุมสงบ ๆ ในห้องสมุดเสมอ", "res/library.png")); // [cite: 38, 39]
+        list.add(new Dialogue("มีน", "“ขอบคุณนะที่ชอบมาอ่านด้วยกัน อยู่ด้วยแล้วสบายใจดี”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 35-37]
+        list.add(new Dialogue("บรรยาย", "ความสัมพันธ์ของเรา กลายเป็นมุมสงบ ๆ ในห้องสมุดเสมอ", "res/BGLibrary.jpg")); // [cite: 38, 39]
         list.add(new Dialogue("SYSTEM", "--- FRIEND ENDING ---", null));
 
         // --- Bad End (Index 15) ---
