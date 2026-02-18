@@ -31,7 +31,7 @@ public class CharacterSelect extends JPanel {
 
         title.setFont(new Font("Tahoma", Font.BOLD, 42));
         title.setBorder(BorderFactory.createEmptyBorder(40, 0, 10, 0)); 
-        add(title, BorderLayout.NORTH); 
+        add(title, BorderLayout.NORTH);
 
         // --- ส่วนแสดงตัวละคร (Center) ---
         JPanel charContainer = new JPanel(new GridLayout(1, 3, 30, 0));
