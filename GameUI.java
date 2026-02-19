@@ -30,7 +30,7 @@ public class GameUI {
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
 
-        // เพิ่มหน้าจอเข้า CardLayout ให้ครบถ้วน
+        // เพิ่มหน้าจอเข้า CardLayout
         mainContainer.add(createMenuPanel(), "MENU");
         mainContainer.add(new CharacterSelect(cardLayout, mainContainer, logic), "CHAR_SELECT");
         mainContainer.add(createGameplayPanel(), "GAMEPLAY");
@@ -38,7 +38,7 @@ public class GameUI {
         frame.add(mainContainer);
     }
 
-    // --- หน้าจอเมนูหลัก (กู้คืนปุ่มทั้ง 4 ปุ่มตามดีไซน์ของคุณ) ---
+    // --- หน้าจอเมนูหลัก (แก้ปัญหาปุ่มกดไม่ได้/ปุ่มหาย) ---
     private JPanel createMenuPanel() {
         JPanel mainPanel = new JPanel(null);
 
@@ -77,12 +77,16 @@ public class GameUI {
         JLabel menuBg = new JLabel(new ImageIcon(bgIcon.getImage().getScaledInstance(1200, 800, Image.SCALE_SMOOTH)));
         menuBg.setBounds(0, 0, 1200, 800);
 
+        // แอดปุ่มก่อน
         mainPanel.add(titleLabel);
         mainPanel.add(startBtn);
         mainPanel.add(settingsBtn);
         mainPanel.add(loadBtn);
         mainPanel.add(exitBtn);
         mainPanel.add(menuBg);
+
+        // บังคับให้พื้นหลังไปอยู่หลังสุด เพื่อให้ปุ่มอยู่หน้าสุดและกดได้
+        mainPanel.setComponentZOrder(menuBg, mainPanel.getComponentCount() - 1);
 
         return mainPanel;
     }
@@ -91,8 +95,9 @@ public class GameUI {
         JPanel panel = new JPanel(null);
         panel.setBackground(Color.BLACK);
 
+        // แก้ไขขยายขนาดขอบเขต choicePanel ให้ใหญ่ขึ้นเพื่อให้กดปุ่มยาวๆ ได้
         choicePanel = new JPanel(new GridLayout(0, 1, 10, 10));
-        choicePanel.setBounds(400, 200, 400, 200);
+        choicePanel.setBounds(350, 200, 500, 300); 
         choicePanel.setOpaque(false);
         choicePanel.setVisible(false);
         panel.add(choicePanel);
@@ -114,16 +119,19 @@ public class GameUI {
         dialogLabel.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 3));
         panel.add(dialogLabel);
 
-        // เลเยอร์รูปซ้อน (Sprite)
         characterSprite = new JLabel();
         characterSprite.setBounds(0, 0, 1200, 800); 
         characterSprite.setHorizontalAlignment(SwingConstants.CENTER);
         panel.add(characterSprite);
 
-        // เลเยอร์พื้นหลัง (Background)
         bgLabel = new JLabel();
         bgLabel.setBounds(0, 0, 1200, 800);
         panel.add(bgLabel);
+
+        // จัดเลเยอร์ Gameplay ให้ตัวเลือกอยู่บนสุด
+        panel.setComponentZOrder(choicePanel, 0);
+        panel.setComponentZOrder(speakerLabel, 1);
+        panel.setComponentZOrder(dialogLabel, 2);
 
         MouseAdapter clickHandler = new MouseAdapter() {
             @Override
@@ -155,25 +163,19 @@ public class GameUI {
             speakerLabel.setText(d.speaker);
             dialogLabel.setText("<html><div style='padding:10px;'>" + d.text + "</div></html>");
 
-            // --- ระบบจัดการ 2 รูปในบรรทัดเดียว (ใช้ | คั่น) ---
             if (d.imagePath != null && !d.imagePath.isEmpty()) {
                 if (d.imagePath.contains("|")) {
                     String[] paths = d.imagePath.split("\\|");
-                    updateImageLayer(bgLabel, paths[0], 1200, 800);      // รูปแรก = พื้นหลัง
-                    updateImageLayer(characterSprite, paths[1], 1200, 800); // รูปสอง = ซ้อนทับ
+                    updateImageLayer(bgLabel, paths[0], 1200, 800);
+                    updateImageLayer(characterSprite, paths[1], 1200, 800);
                 } else {
-                    // กรณีรูปเดียว
                     if ("บรรยาย".equals(d.speaker)) {
                         updateImageLayer(bgLabel, d.imagePath, 1200, 800);
                         characterSprite.setIcon(null);
                     } else {
                         updateImageLayer(characterSprite, d.imagePath, 1200, 800);
-                        bgLabel.setIcon(null);
                     }
                 }
-            } else {
-                bgLabel.setIcon(null);
-                characterSprite.setIcon(null);
             }
 
             if (d.choices != null && d.choices.length > 0) {
@@ -190,45 +192,43 @@ public class GameUI {
     }
 
     private void updateImageLayer(JLabel label, String path, int w, int h) {
-        ImageIcon icon = new ImageIcon(path);
-        Image img = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
-        label.setIcon(new ImageIcon(img));
+        try {
+            ImageIcon icon = new ImageIcon(path);
+            Image img = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
+            label.setIcon(new ImageIcon(img));
+        } catch (Exception e) {
+            System.err.println("ไม่สามารถโหลดรูปได้: " + path);
+        }
     }
 
     private void showChoices(String[] choices, int[] nextSteps) {
-    choicePanel.removeAll();
-    choicePanel.setVisible(true);
-    
-    // วนลูปตามจำนวน Choice
-    for (int i = 0; i < choices.length; i++) {
-        JButton btn = new JButton(choices[i]);
-        styleButton(btn);
+        choicePanel.removeAll();
+        choicePanel.setVisible(true);
         
-        // ตรวจสอบก่อนว่ามี Index ปลายทางรองรับไหม
-        // ถ้าลืมใส่ ให้ default ไปที่ currentStep + 1
-        int target;
-        if (i < nextSteps.length) {
-            target = nextSteps[i];
-        } else {
-            target = currentStep + 1; 
-        }
+        for (int i = 0; i < choices.length; i++) {
+            JButton btn = new JButton(choices[i]);
+            styleButton(btn);
+            
+            final int target = (i < nextSteps.length) ? nextSteps[i] : currentStep + 1;
 
-        btn.addActionListener(e -> {
-            currentStep = target;
-            choicePanel.setVisible(false);
-            advanceDialogue();
-        });
-        choicePanel.add(btn);
+            btn.addActionListener(e -> {
+                currentStep = target;
+                choicePanel.setVisible(false);
+                advanceDialogue();
+            });
+            choicePanel.add(btn);
+        }
+        choicePanel.revalidate();
+        choicePanel.repaint();
     }
-    choicePanel.revalidate();
-    choicePanel.repaint();
-}
 
     private void styleButton(JButton btn) {
         btn.setFont(new Font("Tahoma", Font.BOLD, 18));
         btn.setBackground(Color.WHITE);
+        btn.setForeground(new Color(255, 105, 180)); // เพิ่มสีตัวอักษรให้ชัดเจน
         btn.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 2));
         btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR)); // เปลี่ยนเมาส์เป็นรูปมือเมื่อชี้ปุ่ม
     }
 
     public void show() { frame.setVisible(true); }
