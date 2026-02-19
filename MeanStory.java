@@ -5,56 +5,55 @@ public class MeanStory {
     public static List<Dialogue> getStory() {
         List<Dialogue> list = new ArrayList<>();
 
-        // --- ฉากเกริ่นนำ: ห้องสมุด (รูปจะถูก Fix เป็นฉากหลังเต็มจอ) ---
-        list.add(new Dialogue("บรรยาย", "วันแรก ๆ ของการเปิดเทอม เราแวะเข้าห้องสมุดเพื่อหาที่เงียบ ๆ", "res/BGLibrary.jpg")); // [cite: 2, 3, 11]
+        // Index 0
+        list.add(new Dialogue("บรรยาย", "วันแรก ๆ ของการเปิดเทอม เราแวะเข้าห้องสมุดเพื่อหาที่เงียบ ๆ", "res/BGLibrary.jpg")); 
+        // Index 1
+        list.add(new Dialogue("บรรยาย", "ในห้องสมุดเงียบๆ มีผู้หญิงคนหนึ่งกำลังเอื้อมหยิบหนังสือไม่ถึง", "res/unnamed.jpg")); 
+        // Index 2
+        list.add(new Dialogue("บรรยาย", "เธอดูตั้งใจมาก จนเผลอยิ้มออกมา", "res/unnamed.jpg"));
         
-        // --- ฉากพบกันครั้งแรก (เปลี่ยนฉากหลังเป็นรูปตอนหยิบหนังสือ) ---
-        list.add(new Dialogue("บรรยาย", "ในห้องสมุดเงียบๆ มีผู้หญิงคนหนึ่งกำลังเอื้อมหยิบหนังสือไม่ถึง", "res/unnamed.jpg")); // [cite: 4, 5, 12]
-         list.add(new Dialogue("บรรยาย", "เธอดูตั้งใจมาก จนเผลอยิ้มออกมา", "res/unnamed.jpg")); //มาพิมพ์วงเล็บเอง
-         // ตัวเลือกแรก: เริ่มต้นความสัมพันธ์ (ใช้ชื่อ "คุณ" เพื่อให้ฉากหลังเดิมยังคงอยู่)
+        // Index 3: จุดตัวเลือกแรก
         list.add(new Dialogue("คุณ", "“เข้าไปช่วยดีไหมนะ...”", "res/unnamed.jpg",
-            new String[]{"เข้าไปช่วยหยิบให้","ยิ้มให้แล้วเดินผ่าน","ยืนดูห่างๆ"},
-            new int[]{3, 15 , 16} // [cite: 13, 40]
+            new String[]{"เข้าไปช่วยหยิบให้", "ยิ้มให้แล้วเดินผ่าน", "ยืนดูห่างๆ"},
+            new int[]{4, 15, 15} // เลือกข้อแรกไป Index 4, ข้ออื่นไป Bad End (15)
         ));
 
-    
-        
-        // เปลี่ยนฉากหลังกลับเป็นห้องสมุดปกติ [cite: 8-12]
-        list.add(new Dialogue("คุณ", "“ นี่ครับหนังสือที่คุณต้องการ ”", "res/BGLibrary.jpg|res/Givebook.png")); // [cite: 6, 7]
-        list.add(new Dialogue("มีน", "“ขอบคุณนะคะ”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 14, 19]
+        // Index 4 (รูทช่วยหยิบหนังสือ)
+        list.add(new Dialogue("คุณ", "“ นี่ครับหนังสือที่คุณต้องการ ”", "res/BGLibrary.jpg|res/Givebook.png"));
+        // Index 5
+        list.add(new Dialogue("มีน", "“ขอบคุณนะคะ”", "res/BGLibrary.jpg|res/Mean2.png"));
+        // Index 6
         list.add(new Dialogue("บรรยาย", " นั่นคือจุดเริ่มต้นของความสัมพันธ์เรา ", "res/BGLibrary.jpg"));
-
+        // Index 7
+        list.add(new Dialogue("มีน", "“วันนี้มาอ่านหนังสืออีกแล้วหรอ ดีเลย...จะได้ไม่เหงา”", "res/BGLibrary.jpg|res/Mean2.png")); 
+        // Index 8
+        list.add(new Dialogue("คุณ", "“ เจอกันอีกแล้วนะ ”", "res/BGLibrary.jpg|res/Givebook.png"));
         
-        // --- รูทสนิท (Index 3) --- เปลี่ยนบันทัดเองนะ
-         list.add(new Dialogue("มีน", "“วันนี้มาอ่านหนังสืออีกแล้วหรอ ดีเลย...จะได้ไม่เหงา”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 21, 22] ขอฉากมองผช
-        list.add(new Dialogue("คุณ", "“ เจอกันอีกแล้วนะ  ”", "res/BGLibrary.jpg|res/Givebook.png")); // [cite: 6, 7]
-        //อันนี้แก้เองนะ new String[]{"ชวนมานั่งอ่านหนังสือด้วยกัน", "ยื่นขนมให้", "มองไกลๆ เงียบๆ"},
-        
-        // ตัวเลือกตัดสินจตอนจบ (Index 8) ---มาแก้ด้วยยยง
+        // Index 9: จุดตัวเลือกตัดสินตอนจบ
         list.add(new Dialogue("มีน", "“ช่วงนี้เรามานั่งอ่านหนังสือด้วยกันบ่อยเนอะ”", "res/BGLibrary.jpg|res/Mean2.png"));
-        list.add(new Dialogue("คุณ", "“ เราก็รู้สึกเหมือนกันนะ  ”", "res/BGLibrary.jpg|res/Givebook.png", // [cite: 6, 7]
+        // Index 10: คำถามสารภาพรัก
+        list.add(new Dialogue("คุณ", "“ เราก็รู้สึกเหมือนกันนะ ”", "res/BGLibrary.jpg|res/Givebook.png",
             new String[]{
                 "งั้นต่อไป...ขออยู่ข้างๆแบบนี้ทุกวันได้ไหม",
-                "เราก็ดีใจนะ ที่มีเธอเป็นเพื่อนอ่านหนังสือ"  ,
+                "เราก็ดีใจนะ ที่มีเธอเป็นเพื่อนอ่านหนังสือ",
                 "ขอโทษนะ หลังจากนี้เราอาจไม่ได้มาบ่อยๆแล้ว"
             },
-            new int[]{9, 12, 15}
+            new int[]{11, 13, 15} // กระโดดไปตามฉากจบที่เตรียมไว้
         ));
 
-        // --- Good End (Index 9) ---
-        list.add(new Dialogue("มีน", "“เล่มนี้สนุกมาก แต่อยากอ่านไปพร้อมกันมากกว่า”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 29, 30]
-        list.add(new Dialogue("บรรยาย", "มีนยื่นหนังสือที่มีลายมือเล็กๆ เขียนคั่นไว้ แล้วเธอก็นั่งข้างเราเหมือนทุกวัน", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 27, 28, 31, 32]
+        // --- Good End (เริ่มที่ Index 11) ---
+        list.add(new Dialogue("มีน", "“เล่มนี้สนุกมาก แต่อยากอ่านไปพร้อมกันมากกว่า”", "res/BGLibrary.jpg|res/Mean2.png")); 
+        list.add(new Dialogue("บรรยาย", "มีนยื่นหนังสือที่มีลายมือเล็กๆ เขียนคั่นไว้ แล้วเธอก็นั่งข้างเราเหมือนทุกวัน", "res/BGLibrary.jpg|res/Mean2.png")); 
         list.add(new Dialogue("SYSTEM", "--- HAPPY ENDING ---", null));
 
-        // --- Friend End (Index 12) ---
-        list.add(new Dialogue("มีน", "“ขอบคุณนะที่ชอบมาอ่านด้วยกัน อยู่ด้วยแล้วสบายใจดี”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 35-37]
-        list.add(new Dialogue("บรรยาย", "ความสัมพันธ์ของเรา กลายเป็นมุมสงบ ๆ ในห้องสมุดเสมอ", "res/BGLibrary.jpg")); // [cite: 38, 39]
+        // --- Friend End (เริ่มที่ Index 14) ---
+        list.add(new Dialogue("มีน", "“ขอบคุณนะที่ชอบมาอ่านด้วยกัน อยู่ด้วยแล้วสบายใจดี”", "res/BGLibrary.jpg|res/Mean2.png")); 
+        list.add(new Dialogue("บรรยาย", "ความสัมพันธ์ของเรา กลายเป็นมุมสงบ ๆ ในห้องสมุดเสมอ", "res/BGLibrary.jpg")); 
         list.add(new Dialogue("SYSTEM", "--- FRIEND ENDING ---", null));
 
-        // --- Bad End (Index 15) ---
-        // เปลี่ยนฉากหลังเป็นรูปตอนจบแบบเศร้าตามที่ต้องการ [cite: 40-45]
+        // --- Bad End (เริ่มที่ Index 17) ---
         list.add(new Dialogue("บรรยาย", "เธอก้มหน้าอ่านหนังสือเงียบ ๆ เหมือนกำลังรอใครบางคนที่ไม่ได้กลับมาอีก", "res/empty_chair.jpg")); 
-        list.add(new Dialogue("บรรยาย", "มุมประจำยังเหมือนเดิม แต่ที่นั่งข้างมีนว่างเปล่าเสมอ...", "res/empty_chair.jpg")); // [cite: 41, 42]
+        list.add(new Dialogue("บรรยาย", "มุมประจำยังเหมือนเดิม แต่ที่นั่งข้างมีนว่างเปล่าเสมอ...", "res/empty_chair.jpg")); 
         list.add(new Dialogue("SYSTEM", "--- BAD ENDING ---", null));
 
         return list;
