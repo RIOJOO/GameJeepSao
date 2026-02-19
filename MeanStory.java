@@ -9,22 +9,26 @@ public class MeanStory {
         list.add(new Dialogue("บรรยาย", "วันแรก ๆ ของการเปิดเทอม เราแวะเข้าห้องสมุดเพื่อหาที่เงียบ ๆ", "res/BGLibrary.jpg")); // [cite: 2, 3, 11]
         
         // --- ฉากพบกันครั้งแรก (เปลี่ยนฉากหลังเป็นรูปตอนหยิบหนังสือ) ---
-        list.add(new Dialogue("บรรยาย", "ในห้องสมุดเงียบๆ มีคนกำลังเอื้อมหยิบหนังสือไม่ถึง", "res/unnamed.jpg")); // [cite: 4, 5, 12]
-        
+        list.add(new Dialogue("บรรยาย", "ในห้องสมุดเงียบๆ มีผู้หญิงคนหนึ่งกำลังเอื้อมหยิบหนังสือไม่ถึง", "res/unnamed.jpg")); // [cite: 4, 5, 12]
+         list.add(new Dialogue("บรรยาย", "เธอดูตั้งใจมาก จนเผลอยิ้มออกมา", "res/unnamed.jpg")); //มาพิมพ์วงเล็บเอง
         // ตัวเลือกแรก: เริ่มต้นความสัมพันธ์ (ใช้ชื่อ "คุณ" เพื่อให้ฉากหลังเดิมยังคงอยู่)
         list.add(new Dialogue("คุณ", "“เข้าไปช่วยดีไหมนะ...”", "res/unnamed.jpg",
-            new String[]{"เข้าไปช่วยหยิบให้", "ยืนดูห่างๆ"},
-            new int[]{3, 15} // [cite: 13, 40]
+            new String[]{"เข้าไปช่วยหยิบให้","ยิ้มให้แล้วเดินผ่าน","ยืนดูห่างๆ"}, ///
+            new int[]{3, 15 , 16} // [cite: 13, 40]
         ));
 
-        // --- รูทสนิท (Index 3) ---
-        list.add(new Dialogue("คุณ", "“ นี่ครับหนังสือที่คุณต้องการ ”", "res/BGLibrary.jpg|res/Givebook.png")); // [cite: 6, 7]
-        list.add(new Dialogue("มีน", "“ ขอบคุณมากเลยค่ะพี่ ”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 6, 7]
+    
         
         // เปลี่ยนฉากหลังกลับเป็นห้องสมุดปกติ [cite: 8-12]
+         list.add(new Dialogue("คุณ", "“ นี่ครับหนังสือที่คุณต้องการ ”", "res/BGLibrary.jpg|res/Givebook.png")); // [cite: 6, 7]
+        list.add(new Dialogue("มีน", "“ขอบคุณนะคะ”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 14, 19]
         list.add(new Dialogue("บรรยาย", " นั่นคือจุดเริ่มต้นของความสัมพันธ์เรา ", "res/BGLibrary.jpg"));
-        list.add(new Dialogue("มีน", "“ขอบคุณนะ ถ้าวันนั้นเราคงไม่ได้รู้จักกัน”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 14, 19]
+
         list.add(new Dialogue("มีน", "“ชอบอ่านหนังสือด้วยกันแบบนี้ มันเงียบแต่ไม่เหงาแฮะ”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 21, 22]
+        
+        // --- รูทสนิท (Index 3) ---
+        list.add(new Dialogue("คุณ", "“ นี่ครับหนังสือที่คุณต้องการ ”", "res/BGLibrary.jpg|res/Givebook.png")); // [cite: 6, 7]
+        list.add(new Dialogue("มีน", "“ ขอบคุณมากเลยค่ะ ถ้าไม่ได้พี่ช่วยคงลำบากแน่เลย ”", "res/BGLibrary.jpg|res/Mean2.png")); // [cite: 6, 7]
         
         // ตัวเลือกตัดสินใจตอนจบ (Index 8)
         list.add(new Dialogue("มีน", "“บางที...ก็อยากให้มานั่งข้าง ๆ ทุกวัน”", "res/BGLibrary.jpg|res/Mean2.png",
