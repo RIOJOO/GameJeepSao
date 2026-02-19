@@ -196,22 +196,33 @@ public class GameUI {
     }
 
     private void showChoices(String[] choices, int[] nextSteps) {
-        choicePanel.removeAll();
-        choicePanel.setVisible(true);
-        for (int i = 0; i < choices.length; i++) {
-            JButton btn = new JButton(choices[i]);
-            styleButton(btn);
-            int target = nextSteps[i];
-            btn.addActionListener(e -> {
-                currentStep = target;
-                choicePanel.setVisible(false);
-                advanceDialogue();
-            });
-            choicePanel.add(btn);
+    choicePanel.removeAll();
+    choicePanel.setVisible(true);
+    
+    // วนลูปตามจำนวน Choice
+    for (int i = 0; i < choices.length; i++) {
+        JButton btn = new JButton(choices[i]);
+        styleButton(btn);
+        
+        // ตรวจสอบก่อนว่ามี Index ปลายทางรองรับไหม
+        // ถ้าลืมใส่ ให้ default ไปที่ currentStep + 1
+        int target;
+        if (i < nextSteps.length) {
+            target = nextSteps[i];
+        } else {
+            target = currentStep + 1; 
         }
-        choicePanel.revalidate();
-        choicePanel.repaint();
+
+        btn.addActionListener(e -> {
+            currentStep = target;
+            choicePanel.setVisible(false);
+            advanceDialogue();
+        });
+        choicePanel.add(btn);
     }
+    choicePanel.revalidate();
+    choicePanel.repaint();
+}
 
     private void styleButton(JButton btn) {
         btn.setFont(new Font("Tahoma", Font.BOLD, 18));
