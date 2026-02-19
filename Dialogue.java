@@ -1,4 +1,4 @@
-public class Dialogue {
+                                    public class Dialogue {
     public String speaker;
     public String text;
     public String imagePath;
