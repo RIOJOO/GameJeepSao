@@ -26,7 +26,7 @@ public class GameUI {
         initWindow();
     }
 
-    private void initWindow() {
+    public void initWindow() {
         frame = new JFrame("FirstLove - เกมจีบสาว");
         frame.setSize(1200, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,7 +44,7 @@ public class GameUI {
     }
 
     // --- หน้าจอเมนูหลัก ---
-    private JPanel createMenuPanel() {
+    public JPanel createMenuPanel() {
         JPanel mainPanel = new JPanel(null);
 
         JLabel titleLabel = new JLabel("<html><div style='text-align: center; color: #FF69B4; " +
@@ -90,7 +90,7 @@ public class GameUI {
     }
 
     // --- หน้าจอเล่นเกม (Gameplay) ---
-    private JPanel createGameplayPanel() {
+    public JPanel createGameplayPanel() {
         JPanel panel = new JPanel(null);
         panel.setBackground(Color.BLACK);
 
@@ -171,13 +171,13 @@ public class GameUI {
     }
 
     // ฟังก์ชันอัปเดตสถานะจาก Logic
-    private void updateStatus() {
+    public void updateStatus() {
         if (logic != null && statusLabel != null) {
             statusLabel.setText(logic.getStatusText());
         }
     }
 
-    private void updateImageLayer(JLabel label, String path, int w, int h) {
+    public void updateImageLayer(JLabel label, String path, int w, int h) {
         try {
             ImageIcon icon = new ImageIcon(path);
             Image img = icon.getImage();
@@ -194,14 +194,14 @@ public class GameUI {
         }
     }
 
-    private void startNewStory() {
+    public void startNewStory() {
         String selected = logic.getSelectedCharacter();
         currentStep = 0;
         if ("มีน".equals(selected)) currentStory = MeanStory.getStory();
         advanceDialogue();
     }
 
-    private void advanceDialogue() {
+    public void advanceDialogue() {
         if (currentStory != null && currentStep < currentStory.size()) {
             Dialogue d = currentStory.get(currentStep);
             updateStatus(); // อัปเดตสถานะทุกครั้งที่เปลี่ยนประโยค
@@ -236,7 +236,7 @@ public class GameUI {
         }
     }
 
-    private void showChoices(String[] choices, int[] nextSteps) {
+    public void showChoices(String[] choices, int[] nextSteps) {
         choicePanel.removeAll();
         choicePanel.setVisible(true);
         for (int i = 0; i < choices.length; i++) {
@@ -259,7 +259,7 @@ public class GameUI {
         choicePanel.repaint();
     }
 
-    private void styleButton(JButton btn) {
+    public  void styleButton(JButton btn) {
         btn.setFont(new Font("Tahoma", Font.BOLD, 22));
         btn.setBackground(Color.WHITE);
         btn.setForeground(new Color(255, 105, 180));

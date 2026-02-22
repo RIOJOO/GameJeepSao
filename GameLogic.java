@@ -192,7 +192,7 @@ public class GameLogic {
     /**
      * รีเซ็ตโควต้าของขวัญถ้าเป็นวันใหม่
      */
-    private void checkGiftQuotaReset() {
+    public void checkGiftQuotaReset() {
         LocalDate today = LocalDate.now();
         if (!today.equals(lastGiftResetDate)) {
             giftQuotaToday = 3;
@@ -266,7 +266,7 @@ public class GameLogic {
     /**
      * รีเซ็ตจำนวนครั้งทำงานถ้าเป็นวันใหม่
      */
-    private void checkWorkReset() {
+    public void checkWorkReset() {
         LocalDate today = LocalDate.now();
         if (!today.equals(lastWorkResetDate)) {
             workCountToday = 0;
