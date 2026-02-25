@@ -41,7 +41,7 @@ public class CharacterSelect extends JPanel {
         // ตรวจสอบว่าชื่อเหล่านี้ตรงกับเงื่อนไขใน GameUI.java
         charContainer.add(createCharCard("มีน", "res/Mean.png"));
         charContainer.add(createCharCard("พลอย", "res/Emean.png"));
-        charContainer.add(createCharCard("พี่ลิลลี่", "res/Lilli.png"));
+        charContainer.add(createCharCard("ลิลลี่", "res/Lilli.png"));
 
         add(charContainer, BorderLayout.CENTER);
     }

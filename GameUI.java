@@ -102,7 +102,7 @@ public class GameUI {
         statusLabel.setOpaque(true);
         statusLabel.setBackground(new Color(0, 0, 0, 120)); // พื้นหลังดำโปร่งใส
         statusLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-        updateStatus(); 
+        updateStatus();
 
         // 2. Choice Panel
         choicePanel = new JPanel(new GridLayout(0, 1, 15, 15));
@@ -197,7 +197,15 @@ public class GameUI {
     public void startNewStory() {
         String selected = logic.getSelectedCharacter();
         currentStep = 0;
-        if ("มีน".equals(selected)) currentStory = MeanStory.getStory();
+        if ("มีน".equals(selected)) {
+            currentStory = MeanStory.getStory();
+        }
+        else if ("ลิลลี่".equals(selected)) {
+            currentStory = LilliStory.getStory();
+        }
+        else if ("พลอย".equals(selected)) {
+            currentStory = PloyStory.getStory();
+        }
         advanceDialogue();
     }
 
