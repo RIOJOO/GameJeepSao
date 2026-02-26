@@ -140,7 +140,7 @@ public class GameLogic {
         switch (selectedCharacter) {
             case "มีน": return affectionMean;
             case "พลอย": return affectionPloy;
-            case "พี่ลิลลี่": return affectionLilli;
+            case "ลิลลี่": return affectionLilli;
             default: return 0;
         }
     }
@@ -163,7 +163,7 @@ public class GameLogic {
                 if (affectionPloy > MAX_AFFECTION) affectionPloy = MAX_AFFECTION;
                 if (affectionPloy < 0) affectionPloy = 0;
                 break;
-            case "พี่ลิลลี่": 
+            case "ลิลลี่": 
                 affectionLilli += amount;
                 if (affectionLilli > MAX_AFFECTION) affectionLilli = MAX_AFFECTION;
                 if (affectionLilli < 0) affectionLilli = 0;
@@ -180,7 +180,7 @@ public class GameLogic {
         switch (characterName) {
             case "มีน": return affectionMean;
             case "พลอย": return affectionPloy;
-            case "พี่ลิลลี่": return affectionLilli;
+            case "ลิลลี่": return affectionLilli;
             default: return 0;
         }
     }
