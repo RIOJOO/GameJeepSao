@@ -16,17 +16,16 @@ public class GameUI {
     private JLabel dialogLabel, speakerLabel, characterSprite, bgLabel;
     private JPanel choicePanel;
 
-    // ตัวแปรเชื่อมต่อ Logic (Status Bar)
-    private JLabel statusLabel; 
+    // Status Bar
+    private JLabel statusLabel;
 
     public GameUI(GameLogic logic) {
-        // บังคับสเกล 1.0 เพื่อความคมชัดบนจอ High DPI
         System.setProperty("sun.java2d.uiScale", "1.0");
         this.logic = logic;
         initWindow();
     }
 
-    public void initWindow() {
+    private void initWindow() {
         frame = new JFrame("FirstLove - เกมจีบสาว");
         frame.setSize(1200, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,7 +43,7 @@ public class GameUI {
     }
 
     // --- หน้าจอเมนูหลัก ---
-    public JPanel createMenuPanel() {
+    private JPanel createMenuPanel() {
         JPanel mainPanel = new JPanel(null);
 
         JLabel titleLabel = new JLabel("<html><div style='text-align: center; color: #FF69B4; " +
@@ -53,6 +52,7 @@ public class GameUI {
         titleLabel.setBounds(0, 80, 1200, 150);
 
         int btnX = 490;
+
         JButton startBtn = new JButton("START GAME");
         styleButton(startBtn);
         startBtn.setBounds(btnX, 300, 220, 60);
@@ -70,13 +70,12 @@ public class GameUI {
         styleButton(exitBtn);
         exitBtn.setBounds(btnX, 540, 220, 60);
         exitBtn.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(frame, "ออกจากเกม?", "Exit", JOptionPane.YES_NO_OPTION) == 0) 
-                System.exit(0);
+            if (JOptionPane.showConfirmDialog(frame, "ออกจากเกม?", "Exit", 0) == 0) System.exit(0);
         });
 
-        JLabel menuBg = new JLabel();
+        ImageIcon bgIcon = new ImageIcon("res/school_bg.jpg");
+        JLabel menuBg = new JLabel(new ImageIcon(bgIcon.getImage().getScaledInstance(1200, 800, Image.SCALE_SMOOTH)));
         menuBg.setBounds(0, 0, 1200, 800);
-        updateImageLayer(menuBg, "res/school_bg.jpg", 1200, 800);
 
         mainPanel.add(titleLabel);
         mainPanel.add(startBtn);
@@ -84,29 +83,30 @@ public class GameUI {
         mainPanel.add(loadBtn);
         mainPanel.add(exitBtn);
         mainPanel.add(menuBg);
+
         mainPanel.setComponentZOrder(menuBg, mainPanel.getComponentCount() - 1);
 
         return mainPanel;
     }
 
     // --- หน้าจอเล่นเกม (Gameplay) ---
-    public JPanel createGameplayPanel() {
+    private JPanel createGameplayPanel() {
         JPanel panel = new JPanel(null);
         panel.setBackground(Color.BLACK);
 
-        // 1. Status Bar (เชื่อมต่อกับ GameLogic)
+        // 1. Status Bar
         statusLabel = new JLabel("");
         statusLabel.setBounds(20, 15, 1160, 45);
         statusLabel.setForeground(Color.WHITE);
         statusLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
         statusLabel.setOpaque(true);
-        statusLabel.setBackground(new Color(0, 0, 0, 120)); // พื้นหลังดำโปร่งใส
+        statusLabel.setBackground(new Color(0, 0, 0, 120));
         statusLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
         updateStatus();
 
         // 2. Choice Panel
-        choicePanel = new JPanel(new GridLayout(0, 1, 15, 15));
-        choicePanel.setBounds(300, 150, 600, 350); 
+        choicePanel = new JPanel(new GridLayout(0, 1, 10, 10));
+        choicePanel.setBounds(300, 150, 600, 350);
         choicePanel.setOpaque(false);
         choicePanel.setVisible(false);
 
@@ -123,10 +123,11 @@ public class GameUI {
         dialogLabel = new JLabel("", SwingConstants.CENTER);
         dialogLabel.setBounds(50, 600, 1100, 130);
         dialogLabel.setOpaque(true);
-        dialogLabel.setBackground(new Color(255, 255, 255, 180)); 
+        dialogLabel.setBackground(new Color(255, 255, 255, 220));
         dialogLabel.setFont(new Font("Tahoma", Font.PLAIN, 24));
         dialogLabel.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 3));
 
+        // 5. Sprite & Background
         characterSprite = new JLabel();
         characterSprite.setBounds(0, 0, 1200, 800);
         characterSprite.setHorizontalAlignment(SwingConstants.CENTER);
@@ -161,8 +162,8 @@ public class GameUI {
 
         panel.addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentShown(ComponentEvent e) { 
-                startNewStory(); 
+            public void componentShown(ComponentEvent e) {
+                startNewStory();
                 updateStatus();
             }
         });
@@ -171,13 +172,13 @@ public class GameUI {
     }
 
     // ฟังก์ชันอัปเดตสถานะจาก Logic
-    public void updateStatus() {
+    private void updateStatus() {
         if (logic != null && statusLabel != null) {
             statusLabel.setText(logic.getStatusText());
         }
     }
 
-    public void updateImageLayer(JLabel label, String path, int w, int h) {
+    private void updateImageLayer(JLabel label, String path, int w, int h) {
         try {
             ImageIcon icon = new ImageIcon(path);
             Image img = icon.getImage();
@@ -194,116 +195,98 @@ public class GameUI {
         }
     }
 
-    public void startNewStory() {
+    private void startNewStory() {
         String selected = logic.getSelectedCharacter();
         currentStep = 0;
         if ("มีน".equals(selected)) {
             currentStory = MeanStory.getStory();
-        }
-        else if ("ลิลลี่".equals(selected)) {
+        } else if ("ลิลลี่".equals(selected)) {
             currentStory = LilliStory.getStory();
-        }
-        else if ("พลอย".equals(selected)) {
+        } else if ("พลอย".equals(selected)) {
             currentStory = PloyStory.getStory();
         }
         advanceDialogue();
     }
 
-    // ==== เพิ่มใน advanceDialogue() แทนของเดิม ====
+    private void advanceDialogue() {
+        if (currentStory == null || currentStory.isEmpty()) {
+            cardLayout.show(mainContainer, "MENU");
+            return;
+        }
 
-public void advanceDialogue() {
+        if (currentStep >= currentStory.size()) {
+            cardLayout.show(mainContainer, "MENU");
+            return;
+        }
 
-    if (currentStory == null || currentStory.isEmpty()) {
-        cardLayout.show(mainContainer, "MENU");
-        return;
-    }
+        Dialogue d = currentStory.get(currentStep);
 
-    if (currentStep >= currentStory.size()) {
-        cardLayout.show(mainContainer, "MENU");
-        return;
-    }
+        updateStatus();
 
-    Dialogue d = currentStory.get(currentStep);
+        speakerLabel.setText(d.speaker != null ? d.speaker : "");
+        dialogLabel.setText("<html><div style='padding:15px;'>" +
+                (d.text != null ? d.text : "") +
+                "</div></html>");
 
-    updateStatus();
-
-    speakerLabel.setText(d.speaker != null ? d.speaker : "");
-    dialogLabel.setText("<html><div style='padding:15px;'>" +
-            (d.text != null ? d.text : "") +
-            "</div></html>");
-
-    // ==== จัดการรูปภาพแบบปลอดภัย ====
-    if (d.imagePath != null && !d.imagePath.isEmpty()) {
-
-        if (d.imagePath.contains("|")) {
-
-            String[] paths = d.imagePath.split("\\|");
-
-            if (paths.length > 0)
-                updateImageLayer(bgLabel, paths[0], 1200, 800);
-
-            if (paths.length > 1)
-                updateImageLayer(characterSprite, paths[1], 1200, 800);
-
-        } else {
-
-            if ("บรรยาย".equals(d.speaker)) {
-                updateImageLayer(bgLabel, d.imagePath, 1200, 800);
-                characterSprite.setIcon(null);
+        // จัดการรูปภาพ
+        if (d.imagePath != null && !d.imagePath.isEmpty()) {
+            if (d.imagePath.contains("|")) {
+                String[] paths = d.imagePath.split("\\|");
+                if (paths.length > 0)
+                    updateImageLayer(bgLabel, paths[0], 1200, 800);
+                if (paths.length > 1)
+                    updateImageLayer(characterSprite, paths[1], 1200, 800);
             } else {
-                updateImageLayer(characterSprite, d.imagePath, 1200, 800);
+                if ("บรรยาย".equals(d.speaker)) {
+                    updateImageLayer(bgLabel, d.imagePath, 1200, 800);
+                    characterSprite.setIcon(null);
+                } else {
+                    updateImageLayer(characterSprite, d.imagePath, 1200, 800);
+                }
             }
+        }
+
+        // จัดการ Choice
+        if (d.choices != null && d.choices.length > 0) {
+            if (d.nextSteps == null)
+                d.nextSteps = new int[d.choices.length];
+            showChoices(d.choices, d.nextSteps, d.affectionGains);
+        } else {
+            currentStep++;
+            choicePanel.setVisible(false);
         }
     }
 
-    // ==== จัดการ Choice แบบกันพัง ====
-    if (d.choices != null && d.choices.length > 0) {
+    private void showChoices(String[] choices, int[] nextSteps, int[] affectionGains) {
+        choicePanel.removeAll();
+        choicePanel.setVisible(true);
 
-        if (d.nextSteps == null)
-            d.nextSteps = new int[d.choices.length];
+        for (int i = 0; i < choices.length; i++) {
+            JButton btn = new JButton(choices[i]);
+            styleButton(btn);
 
-        showChoices(d.choices, d.nextSteps, d.affectionGains);
+            final int target = (nextSteps != null && i < nextSteps.length)
+                    ? nextSteps[i] : currentStep + 1;
 
-    } else {
-        currentStep++;
-        choicePanel.setVisible(false);
-    }
-}
+            final int affGain = (affectionGains != null && i < affectionGains.length)
+                    ? affectionGains[i] : 0;
 
-    public void showChoices(String[] choices, int[] nextSteps, int[] affectionGains) {
+            btn.addActionListener(e -> {
+                if (affGain != 0) logic.addAffection(affGain);
+                updateStatus();
+                currentStep = target;
+                choicePanel.setVisible(false);
+                advanceDialogue();
+            });
 
-    choicePanel.removeAll();
-    choicePanel.setVisible(true);
+            choicePanel.add(btn);
+        }
 
-    for (int i = 0; i < choices.length; i++) {
-
-        JButton btn = new JButton(choices[i]);
-        styleButton(btn);
-
-        final int target =
-                (nextSteps != null && i < nextSteps.length)
-                        ? nextSteps[i]
-                        : currentStep + 1;
-
-        final int affGain = (affectionGains != null && i < affectionGains.length)
-                ? affectionGains[i] : 0;
-
-        btn.addActionListener(e -> {
-            if (affGain != 0) logic.addAffection(affGain);
-            updateStatus();
-            currentStep = target;
-            choicePanel.setVisible(false);
-            advanceDialogue();
-        });
-
-        choicePanel.add(btn);
+        choicePanel.revalidate();
+        choicePanel.repaint();
     }
 
-    choicePanel.revalidate();
-    choicePanel.repaint();
-}
-
-    public  void styleButton(JButton btn) {
+    private void styleButton(JButton btn) {
         btn.setFont(new Font("Tahoma", Font.BOLD, 22));
         btn.setBackground(Color.WHITE);
         btn.setForeground(new Color(255, 105, 180));
