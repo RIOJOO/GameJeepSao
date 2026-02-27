@@ -16,11 +16,10 @@ public class GameUI {
     private JLabel dialogLabel, speakerLabel, characterSprite, bgLabel;
     private JPanel choicePanel;
 
-    // ตัวแปรเชื่อมต่อ Logic (Status Bar)
-    private JLabel statusLabel; 
+    // HUD labels
+    private JLabel moneyLabel, affectionLabel, energyLabel;
 
     public GameUI(GameLogic logic) {
-        // บังคับสเกล 1.0 เพื่อความคมชัดบนจอ High DPI
         System.setProperty("sun.java2d.uiScale", "1.0");
         this.logic = logic;
         initWindow();
@@ -36,19 +35,22 @@ public class GameUI {
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
 
-        mainContainer.add(createMenuPanel(), "MENU");
+        mainContainer.add(createMenuPanel(),   "MENU");
         mainContainer.add(new CharacterSelect(cardLayout, mainContainer, logic), "CHAR_SELECT");
         mainContainer.add(createGameplayPanel(), "GAMEPLAY");
+        mainContainer.add(new WorkGame_ui(cardLayout, mainContainer, logic), "WORK");
+        mainContainer.add(new Shop_ui(cardLayout, mainContainer, logic),     "SHOP");
 
         frame.add(mainContainer);
     }
 
-    // --- หน้าจอเมนูหลัก ---
+    // หน้าเมนูหลัก
     public JPanel createMenuPanel() {
         JPanel mainPanel = new JPanel(null);
 
-        JLabel titleLabel = new JLabel("<html><div style='text-align: center; color: #FF69B4; " +
-                "text-shadow: 3px 3px 0px #FFFFFF;'>First Love</div></html>", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel(
+            "<html><div style='text-align: center; color: #FF69B4; text-shadow: 3px 3px 0px #FFFFFF;'>First Love</div></html>",
+            SwingConstants.CENTER);
         titleLabel.setFont(new Font("Tahoma", Font.BOLD, 100));
         titleLabel.setBounds(0, 80, 1200, 150);
 
@@ -70,7 +72,7 @@ public class GameUI {
         styleButton(exitBtn);
         exitBtn.setBounds(btnX, 540, 220, 60);
         exitBtn.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(frame, "ออกจากเกม?", "Exit", JOptionPane.YES_NO_OPTION) == 0) 
+            if (JOptionPane.showConfirmDialog(frame, "ออกจากเกม?", "Exit", JOptionPane.YES_NO_OPTION) == 0)
                 System.exit(0);
         });
 
@@ -85,32 +87,59 @@ public class GameUI {
         mainPanel.add(exitBtn);
         mainPanel.add(menuBg);
         mainPanel.setComponentZOrder(menuBg, mainPanel.getComponentCount() - 1);
-
         return mainPanel;
     }
 
-    // --- หน้าจอเล่นเกม (Gameplay) ---
+    // หน้าเล่นเกม
     public JPanel createGameplayPanel() {
         JPanel panel = new JPanel(null);
         panel.setBackground(Color.BLACK);
 
-        // 1. Status Bar (เชื่อมต่อกับ GameLogic)
-        statusLabel = new JLabel("");
-        statusLabel.setBounds(20, 15, 1160, 45);
-        statusLabel.setForeground(Color.WHITE);
-        statusLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
-        statusLabel.setOpaque(true);
-        statusLabel.setBackground(new Color(0, 0, 0, 120)); // พื้นหลังดำโปร่งใส
-        statusLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-        updateStatus();
+        // ── HUD กรอบซ้าย: เงิน | ความชอบ | พลังงาน ──
+        JPanel hudLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 7));
+        hudLeft.setOpaque(true);
+        hudLeft.setBackground(new Color(15, 15, 15, 200));
+        hudLeft.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 2, true));
+        hudLeft.setBounds(8, 8, 840, 46);
 
-        // 2. Choice Panel
+        moneyLabel     = makeHudLabel("💰 500 บาท",         new Color(255, 230, 80));
+        affectionLabel = makeHudLabel("💝 ความชอบ 0/100",   new Color(255, 160, 210));
+        energyLabel    = makeHudLabel("⚡ 100/100",          new Color(100, 220, 255));
+
+        JSeparator sep1 = new JSeparator(JSeparator.VERTICAL);
+        sep1.setPreferredSize(new Dimension(2, 26));
+        sep1.setForeground(new Color(255, 105, 180, 100));
+        JSeparator sep2 = new JSeparator(JSeparator.VERTICAL);
+        sep2.setPreferredSize(new Dimension(2, 26));
+        sep2.setForeground(new Color(255, 105, 180, 100));
+
+        hudLeft.add(moneyLabel);
+        hudLeft.add(sep1);
+        hudLeft.add(affectionLabel);
+        hudLeft.add(sep2);
+        hudLeft.add(energyLabel);
+
+        // ── HUD กรอบขวา: ปุ่ม Job | Shop ──
+        JPanel hudRight = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 7));
+        hudRight.setOpaque(true);
+        hudRight.setBackground(new Color(15, 15, 15, 200));
+        hudRight.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 2, true));
+        hudRight.setBounds(856, 8, 336, 46);
+
+        JButton jobBtn  = makeHudButton("💼 งาน",    new Color(100, 220, 120));
+        JButton shopBtn = makeHudButton("🛍 ร้านค้า", new Color(255, 105, 180));
+        jobBtn.addActionListener(e  -> cardLayout.show(mainContainer, "WORK"));
+        shopBtn.addActionListener(e -> cardLayout.show(mainContainer, "SHOP"));
+        hudRight.add(jobBtn);
+        hudRight.add(shopBtn);
+
+        // ── Choice Panel ──
         choicePanel = new JPanel(new GridLayout(0, 1, 15, 15));
-        choicePanel.setBounds(300, 150, 600, 350); 
+        choicePanel.setBounds(300, 150, 600, 350);
         choicePanel.setOpaque(false);
         choicePanel.setVisible(false);
 
-        // 3. ชื่อผู้พูด
+        // ── ชื่อผู้พูด ──
         speakerLabel = new JLabel("");
         speakerLabel.setBounds(50, 560, 200, 40);
         speakerLabel.setOpaque(true);
@@ -119,14 +148,15 @@ public class GameUI {
         speakerLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
         speakerLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // 4. กล่องคำพูด
+        // ── กล่องคำพูด ──
         dialogLabel = new JLabel("", SwingConstants.CENTER);
         dialogLabel.setBounds(50, 600, 1100, 130);
         dialogLabel.setOpaque(true);
-        dialogLabel.setBackground(new Color(255, 255, 255, 180)); 
+        dialogLabel.setBackground(new Color(255, 255, 255, 180));
         dialogLabel.setFont(new Font("Tahoma", Font.PLAIN, 24));
         dialogLabel.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 3));
 
+        // ── Sprite + BG ──
         characterSprite = new JLabel();
         characterSprite.setBounds(0, 0, 1200, 800);
         characterSprite.setHorizontalAlignment(SwingConstants.CENTER);
@@ -134,25 +164,26 @@ public class GameUI {
         bgLabel = new JLabel();
         bgLabel.setBounds(0, 0, 1200, 800);
 
-        // จัดเลเยอร์ (หน้าสุดไปหลังสุด)
-        panel.add(statusLabel);
+        // ── เพิ่มและจัดเลเยอร์ ──
+        panel.add(hudLeft);
+        panel.add(hudRight);
         panel.add(choicePanel);
         panel.add(speakerLabel);
         panel.add(dialogLabel);
         panel.add(characterSprite);
         panel.add(bgLabel);
 
-        panel.setComponentZOrder(statusLabel, 0);
-        panel.setComponentZOrder(choicePanel, 1);
-        panel.setComponentZOrder(speakerLabel, 2);
-        panel.setComponentZOrder(dialogLabel, 3);
-        panel.setComponentZOrder(characterSprite, 4);
-        panel.setComponentZOrder(bgLabel, 5);
+        panel.setComponentZOrder(hudLeft,         0);
+        panel.setComponentZOrder(hudRight,        1);
+        panel.setComponentZOrder(choicePanel,     2);
+        panel.setComponentZOrder(speakerLabel,    3);
+        panel.setComponentZOrder(dialogLabel,     4);
+        panel.setComponentZOrder(characterSprite, 5);
+        panel.setComponentZOrder(bgLabel,         6);
 
         // คลิกเพื่อไปต่อ
         MouseAdapter clickHandler = new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
+            @Override public void mouseClicked(MouseEvent e) {
                 if (!choicePanel.isVisible()) advanceDialogue();
             }
         };
@@ -160,9 +191,8 @@ public class GameUI {
         dialogLabel.addMouseListener(clickHandler);
 
         panel.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentShown(ComponentEvent e) { 
-                startNewStory(); 
+            @Override public void componentShown(ComponentEvent e) {
+                startNewStory();
                 updateStatus();
             }
         });
@@ -170,11 +200,35 @@ public class GameUI {
         return panel;
     }
 
-    // ฟังก์ชันอัปเดตสถานะจาก Logic
+    // อัปเดต HUD
     public void updateStatus() {
-        if (logic != null && statusLabel != null) {
-            statusLabel.setText(logic.getStatusText());
-        }
+        if (logic == null) return;
+        if (moneyLabel     != null) moneyLabel.setText("💰 " + logic.getMoney() + " บาท");
+        if (affectionLabel != null) affectionLabel.setText("💝 ความชอบ " + logic.getCurrentAffection() + "/100");
+        if (energyLabel    != null) energyLabel.setText("⚡ " + logic.getEnergy() + "/" + logic.getMaxEnergy());
+    }
+
+    private JLabel makeHudLabel(String text, Color color) {
+        JLabel lbl = new JLabel(text);
+        lbl.setFont(new Font("Tahoma", Font.BOLD, 15));
+        lbl.setForeground(color);
+        return lbl;
+    }
+
+    private JButton makeHudButton(String text, Color color) {
+        JButton btn = new JButton(text);
+        btn.setFont(new Font("Tahoma", Font.BOLD, 15));
+        btn.setBackground(new Color(30, 30, 30));
+        btn.setForeground(color);
+        btn.setBorder(BorderFactory.createLineBorder(color, 2, true));
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setPreferredSize(new Dimension(148, 30));
+        btn.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) { btn.setBackground(new Color(50, 50, 50)); }
+            public void mouseExited(MouseEvent e)  { btn.setBackground(new Color(30, 30, 30)); }
+        });
+        return btn;
     }
 
     public void updateImageLayer(JLabel label, String path, int w, int h) {
@@ -184,8 +238,8 @@ public class GameUI {
             BufferedImage bimg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = bimg.createGraphics();
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_RENDERING,     RenderingHints.VALUE_RENDER_QUALITY);
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
             g2.drawImage(img, 0, 0, w, h, null);
             g2.dispose();
             label.setIcon(new ImageIcon(bimg));
@@ -199,11 +253,9 @@ public class GameUI {
         currentStep = 0;
         if ("มีน".equals(selected)) {
             currentStory = MeanStory.getStory();
-        }
-        else if ("ลิลลี่".equals(selected)) {
+        } else if ("ลิลลี่".equals(selected)) {
             currentStory = LilliStory.getStory();
-        }
-        else if ("พลอย".equals(selected)) {
+        } else if ("พลอย".equals(selected)) {
             currentStory = PloyStory.getStory();
         }
         advanceDialogue();
@@ -212,12 +264,11 @@ public class GameUI {
     public void advanceDialogue() {
         if (currentStory != null && currentStep < currentStory.size()) {
             Dialogue d = currentStory.get(currentStep);
-            updateStatus(); // อัปเดตสถานะทุกครั้งที่เปลี่ยนประโยค
-            
+            updateStatus();
+
             speakerLabel.setText(d.speaker);
             dialogLabel.setText("<html><div style='padding:15px;'>" + d.text + "</div></html>");
 
-            // การจัดการรูปภาพ (BG + Sprite)
             if (d.imagePath != null && !d.imagePath.isEmpty()) {
                 if (d.imagePath.contains("|")) {
                     String[] paths = d.imagePath.split("\\|");
@@ -234,7 +285,7 @@ public class GameUI {
             }
 
             if (d.choices != null && d.choices.length > 0) {
-                showChoices(d.choices, d.nextSteps);
+                showChoices(d.choices, d.nextSteps, d.affectionGains);
             } else {
                 currentStep++;
                 choicePanel.setVisible(false);
@@ -244,19 +295,18 @@ public class GameUI {
         }
     }
 
-    public void showChoices(String[] choices, int[] nextSteps) {
+    public void showChoices(String[] choices, int[] nextSteps, int[] affectionGains) {
         choicePanel.removeAll();
         choicePanel.setVisible(true);
         for (int i = 0; i < choices.length; i++) {
             JButton btn = new JButton(choices[i]);
             styleButton(btn);
             final int target = (i < nextSteps.length) ? nextSteps[i] : currentStep + 1;
-            
+            final int gain   = (affectionGains != null && i < affectionGains.length) ? affectionGains[i] : 0;
+
             btn.addActionListener(e -> {
-                // ตัวอย่าง: ทุกการเลือกอาจจะลดพลังงาน 1 หน่วย
-                // logic.useEnergy(1); 
+                if (gain != 0) logic.addAffection(gain);
                 updateStatus();
-                
                 currentStep = target;
                 choicePanel.setVisible(false);
                 advanceDialogue();
@@ -267,7 +317,7 @@ public class GameUI {
         choicePanel.repaint();
     }
 
-    public  void styleButton(JButton btn) {
+    public void styleButton(JButton btn) {
         btn.setFont(new Font("Tahoma", Font.BOLD, 22));
         btn.setBackground(Color.WHITE);
         btn.setForeground(new Color(255, 105, 180));
