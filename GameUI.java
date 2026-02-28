@@ -15,9 +15,15 @@ public class GameUI {
     private JLabel dialogLabel, speakerLabel, characterSprite, bgLabel;
     private JPanel choicePanel;
 
-    private JLabel moneyLabel, affectionLabel, energyLabel;
+    private JLabel moneyLabel, affectionLabel, energyLabel, dateLabel;
+    private Home homePanel;
     private JPanel menuPopup;
     private boolean menuOpen = false;
+    private GameDate gameDate = new GameDate();
+    private static final String[] MONTH_SHORT = {
+        "Jan","Feb","Mar","Apr","May","Jun",
+        "Jul","Aug","Sep","Oct","Nov","Dec"
+    };
 
     public GameUI(GameLogic logic) {
         System.setProperty("sun.java2d.uiScale", "1.0");
@@ -40,6 +46,8 @@ public class GameUI {
         mainContainer.add(createGameplayPanel(), "GAMEPLAY");
         mainContainer.add(new WorkGame_ui(cardLayout, mainContainer, logic), "WORK");
         mainContainer.add(new Shop_ui(cardLayout, mainContainer, logic), "SHOP");
+        homePanel = new Home(cardLayout, mainContainer, logic, gameDate, this::updateStatus);
+        mainContainer.add(homePanel, "HOME");
 
         frame.add(mainContainer);
     }
@@ -63,6 +71,29 @@ public class GameUI {
 
         JButton loadBtn = new JButton("LOAD GAME");
         styleButton(loadBtn); loadBtn.setBounds(bx, 460, 220, 60);
+        loadBtn.addActionListener(e -> {
+            if (!SaveManager.hasSave()) {
+                JOptionPane.showMessageDialog(frame,
+                    "ไม่พบข้อมูล Save ครับ\nกด START GAME เพื่อเริ่มใหม่",
+                    "ไม่พบ Save", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            boolean ok = SaveManager.load(logic, gameDate);
+            if (ok) {
+                homePanel.refreshLabels();
+                updateStatus();
+                cardLayout.show(mainContainer, "GAMEPLAY");
+                JOptionPane.showMessageDialog(frame,
+                    "<html><div style='font-size:15px;text-align:center'>" +
+                    "✅ โหลดเกมสำเร็จ!<br>" +
+                    "ยินดีต้อนรับกลับมา " + logic.getSelectedCharacter() +
+                    "</div></html>",
+                    "โหลดเกม", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(frame,
+                    "โหลดเกมไม่สำเร็จ", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         JButton exitBtn = new JButton("EXIT");
         styleButton(exitBtn); exitBtn.setBounds(bx, 540, 220, 60);
@@ -98,6 +129,7 @@ public class GameUI {
         moneyLabel     = makeHudLabel("💰 500 บาท",       new Color(255, 230, 80));
         affectionLabel = makeHudLabel("💝 ความชอบ 0/100", new Color(255, 160, 210));
         energyLabel    = makeHudLabel("⚡ 100/100",        new Color(100, 220, 255));
+        dateLabel    = makeHudLabel("📅 1 Jan",            new Color(180, 220, 255));
 
         JPanel hudLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 16, 7));
         hudLeft.setOpaque(true);
@@ -108,6 +140,9 @@ public class GameUI {
         hudLeft.add(moneyLabel); hudLeft.add(s1);
         hudLeft.add(affectionLabel); hudLeft.add(s2);
         hudLeft.add(energyLabel);
+        JSeparator s3 = new JSeparator(JSeparator.VERTICAL); s3.setPreferredSize(new Dimension(2, 24));
+        hudLeft.add(s3);
+        hudLeft.add(dateLabel);
         hudLeft.setSize(hudLeft.getPreferredSize());
         hudLeft.setBounds(8, 8, hudLeft.getPreferredSize().width, 46);
 
@@ -145,13 +180,30 @@ public class GameUI {
             cardLayout.show(mainContainer, "WORK");
         });
 
-        menuPopup.add(Box.createVerticalStrut(16));
-        menuPopup.add(shopBtn);
-        menuPopup.add(Box.createVerticalStrut(12));
-        menuPopup.add(jobBtn);
-        menuPopup.add(Box.createVerticalStrut(16));
+        JButton homeBtn     = makeMenuButton("🏠  กลับบ้าน",   new Color(255, 200, 80));
+        JButton calendarBtn = makeMenuButton("📅  ปฏิทิน",      new Color(150, 200, 255));
 
-        int popW = 280, popH = 160;
+        homeBtn.addActionListener(e -> {
+            menuOpen = false; menuPopup.setVisible(false);
+            homePanel.refreshLabels();
+            cardLayout.show(mainContainer, "HOME");
+        });
+        calendarBtn.addActionListener(e -> {
+            menuOpen = false; menuPopup.setVisible(false);
+            showCalendarPopup();
+        });
+
+        menuPopup.add(Box.createVerticalStrut(12));
+        menuPopup.add(shopBtn);
+        menuPopup.add(Box.createVerticalStrut(8));
+        menuPopup.add(jobBtn);
+        menuPopup.add(Box.createVerticalStrut(8));
+        menuPopup.add(homeBtn);
+        menuPopup.add(Box.createVerticalStrut(8));
+        menuPopup.add(calendarBtn);
+        menuPopup.add(Box.createVerticalStrut(12));
+
+        int popW = 300, popH = 310;
         menuPopup.setBounds((1200 - popW) / 2, (800 - popH) / 2, popW, popH);
 
         // Speaker + Dialog
@@ -225,6 +277,7 @@ public class GameUI {
         if (moneyLabel     != null) moneyLabel.setText("💰 " + logic.getMoney() + " บาท");
         if (affectionLabel != null) affectionLabel.setText("💝 ความชอบ " + logic.getCurrentAffection() + "/100");
         if (energyLabel    != null) energyLabel.setText("⚡ " + logic.getEnergy() + "/" + logic.getMaxEnergy());
+        if (dateLabel      != null) dateLabel.setText("📅 " + gameDate.getDay() + " " + MONTH_SHORT[gameDate.getMonth() - 1]);
     }
 
     // ─── Helpers ────────────────────────────────────────────────────────────
@@ -339,6 +392,127 @@ public class GameUI {
         }
         choicePanel.revalidate();
         choicePanel.repaint();
+    }
+
+
+    // ─── ปฏิทิน Popup ───────────────────────────────────────────────────────
+    private void showCalendarPopup() {
+        JDialog dialog = new JDialog(frame, "ปฏิทิน", true);
+        dialog.setUndecorated(true);
+        dialog.setBackground(new Color(0, 0, 0, 0));
+
+        // panel หลัก — สีครีมอบอุ่น
+        JPanel cal = new JPanel(null) {
+            @Override protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                // พื้นหลัง + กรอบ
+                g2.setColor(new Color(240, 220, 170));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                g2.setColor(new Color(140, 90, 40));
+                g2.setStroke(new BasicStroke(4));
+                g2.drawRoundRect(2, 2, getWidth()-4, getHeight()-4, 20, 20);
+            }
+        };
+        int calW = 480, calH = 400;
+        cal.setPreferredSize(new Dimension(calW, calH));
+        cal.setOpaque(false);
+
+        // หัวเดือน
+        String monthYearText = gameDate.getMonthName() + "  ปีที่ " + gameDate.getYear();
+        JLabel monthLabel = new JLabel(monthYearText, SwingConstants.CENTER);
+        monthLabel.setFont(new Font("Tahoma", Font.BOLD, 22));
+        monthLabel.setForeground(new Color(100, 50, 10));
+        monthLabel.setBounds(0, 10, calW, 36);
+        cal.add(monthLabel);
+
+        // หัวคอลัมน์วัน
+        String[] dayNames = {"จ", "อ", "พ", "พฤ", "ศ", "ส", "อา"};
+        Color[] dayColors = {
+            new Color(60,60,60), new Color(60,60,60), new Color(60,60,60),
+            new Color(60,60,60), new Color(60,60,60),
+            new Color(160,80,0), new Color(180,40,40)
+        };
+        int cellW = 62, cellH = 54;
+        int startX = 20, startY = 52;
+
+        for (int d = 0; d < 7; d++) {
+            JLabel h = new JLabel(dayNames[d], SwingConstants.CENTER);
+            h.setFont(new Font("Tahoma", Font.BOLD, 15));
+            h.setForeground(dayColors[d]);
+            h.setBounds(startX + d * cellW, startY, cellW, 24);
+            cal.add(h);
+        }
+
+        // เส้นคั่น
+        int today = gameDate.getDay();
+
+        // วันที่ 1-28 (4 สัปดาห์)
+        for (int day = 1; day <= 28; day++) {
+            final int dayNum = day;
+            int week = (day - 1) / 7;       // แถว 0-3
+            int dow  = (day - 1) % 7;       // คอลัมน์ 0-6
+
+            int cx = startX + dow * cellW;
+            int cy = startY + 28 + week * cellH;
+
+            // cell panel
+            JPanel cell = new JPanel(null) {
+                @Override protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    Graphics2D g2 = (Graphics2D) g;
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    // วันปัจจุบัน — ไฮไลต์
+                    if (dayNum == today) {
+                        g2.setColor(new Color(255, 220, 80, 180));
+                        g2.fillRoundRect(2, 2, getWidth()-4, getHeight()-4, 8, 8);
+                        g2.setColor(new Color(200, 130, 0));
+                        g2.setStroke(new BasicStroke(2));
+                        g2.drawRoundRect(2, 2, getWidth()-4, getHeight()-4, 8, 8);
+                    }
+                    // วันผ่านแล้ว — มืดลง
+                    else if (dayNum < today) {
+                        g2.setColor(new Color(0, 0, 0, 30));
+                        g2.fillRoundRect(2, 2, getWidth()-4, getHeight()-4, 8, 8);
+                    }
+                }
+            };
+            cell.setOpaque(false);
+            cell.setBounds(cx, cy, cellW, cellH);
+
+            // ตัวเลขวัน
+            JLabel numLbl = new JLabel(String.valueOf(day), SwingConstants.CENTER);
+            numLbl.setFont(new Font("Tahoma", day == today ? Font.BOLD : Font.PLAIN, 15));
+            // สี: เสาร์=น้ำตาล อาทิตย์=แดง อื่น=ดำ; ถ้าผ่านแล้วจาง
+            Color numColor;
+            if (day < today) numColor = new Color(160, 140, 110);
+            else if (dow == 5) numColor = new Color(160, 80, 0);
+            else if (dow == 6) numColor = new Color(180, 40, 40);
+            else               numColor = new Color(60, 40, 10);
+            numLbl.setForeground(numColor);
+            numLbl.setBounds(0, 2, cellW, 20);
+            cell.add(numLbl);
+
+            cal.add(cell);
+        }
+
+        // ปุ่มปิด
+        JButton closeBtn = new JButton("✕  ปิด");
+        closeBtn.setFont(new Font("Tahoma", Font.BOLD, 16));
+        closeBtn.setBackground(new Color(180, 120, 50));
+        closeBtn.setForeground(Color.WHITE);
+        closeBtn.setBorder(BorderFactory.createLineBorder(new Color(120, 70, 20), 2, true));
+        closeBtn.setFocusPainted(false);
+        closeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        closeBtn.setBounds(calW/2 - 70, calH - 52, 140, 38);
+        closeBtn.addActionListener(e -> dialog.dispose());
+        cal.add(closeBtn);
+
+        dialog.add(cal);
+        dialog.pack();
+        dialog.setLocationRelativeTo(frame);
+        dialog.setVisible(true);
     }
 
     public void show() { frame.setVisible(true); }

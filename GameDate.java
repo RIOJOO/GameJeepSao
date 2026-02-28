@@ -59,6 +59,13 @@ public class GameDate {
     // ─────────────────────────────────────────
     // ข้ามวัน (เรียกเมื่อนอนหลับ ฯลฯ)
     // ─────────────────────────────────────────
+    // ── Setter สำหรับ Load Game ──
+    public void setDate(int year, int month, int day) {
+        this.year  = year;
+        this.month = month;
+        this.day   = day;
+    }
+
     public void nextDay() {
         day++;
 
