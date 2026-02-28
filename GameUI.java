@@ -48,7 +48,6 @@ public class GameUI {
         mainContainer.add(new Shop_ui(cardLayout, mainContainer, logic), "SHOP");
         homePanel = new Home(cardLayout, mainContainer, logic, gameDate, this::updateStatus);
         mainContainer.add(homePanel, "HOME");
-        mainContainer.add(new MultiplayerLobby(cardLayout, mainContainer), "MULTI");
 
         frame.add(mainContainer);
     }
@@ -96,13 +95,8 @@ public class GameUI {
             }
         });
 
-        JButton multiBtn = new JButton("MULTIPLAYER");
-        styleButton(multiBtn); multiBtn.setBounds(bx, 540, 220, 60);
-        multiBtn.setForeground(new Color(100, 180, 255));
-        multiBtn.addActionListener(e -> cardLayout.show(mainContainer, "MULTI"));
-
         JButton exitBtn = new JButton("EXIT");
-        styleButton(exitBtn); exitBtn.setBounds(bx, 620, 220, 60);
+        styleButton(exitBtn); exitBtn.setBounds(bx, 540, 220, 60);
         exitBtn.addActionListener(e -> {
             if (JOptionPane.showConfirmDialog(frame, "ออกจากเกม?", "Exit",
                     JOptionPane.YES_NO_OPTION) == 0) System.exit(0);
@@ -113,7 +107,7 @@ public class GameUI {
         updateImageLayer(bg, "res/school_bg.jpg", 1200, 800);
 
         p.add(title); p.add(startBtn); p.add(settingsBtn);
-        p.add(loadBtn); p.add(multiBtn); p.add(exitBtn); p.add(bg);
+        p.add(loadBtn); p.add(exitBtn); p.add(bg);
         p.setComponentZOrder(bg, p.getComponentCount() - 1);
         return p;
     }
