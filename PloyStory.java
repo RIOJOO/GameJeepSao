@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import java.util.*;
 
 public class PloyStory {
@@ -292,4 +293,17 @@ public class PloyStory {
         public int getScore() { return score; }
     }
 >>>>>>> script
+=======
+import java.util.ArrayList;
+import java.util.List;
+
+public class PloyStory {
+    public static List<Dialogue> getStory() {
+        List<Dialogue> list = new ArrayList<>();
+        list.add(new Dialogue("พลอย", "เฮ้! มาทำงานกลุ่มด้วยกันไหม?", "res/Emean.png"));
+        list.add(new Dialogue("คุณ", "ได้เลยครับ", null));
+        list.add(new Dialogue("พลอย", "ดีจัง! งั้นเริ่มกันเลยนะ", "res/Emean.png"));
+        return list;
+    }
+>>>>>>> 27dd230c70694e9d37a44a119ae41c0285807474
 }
