@@ -165,14 +165,12 @@ public class GameLogic {
     // ระบบของขวัญ
     // ========================================
     
-<<<<<<< HEAD
+
     /**
      * รีเซ็ตโควต้าของขวัญถ้าเป็นวันใหม่
      */
     private void checkGiftQuotaReset() {
-=======
     public void checkGiftQuotaReset() {
->>>>>>> ArtGTR
         LocalDate today = LocalDate.now();
         if (!today.equals(lastGiftResetDate)) {
             giftQuotaToday = 3;
@@ -182,7 +180,6 @@ public class GameLogic {
     }
     
     public int getGiftQuota() {
-<<<<<<< HEAD
 
         return giftQuotaToday;
     }
@@ -193,14 +190,12 @@ public class GameLogic {
      */
     public int sendGift(String giftType) {
 
-=======
         checkGiftQuotaReset();
         return giftQuotaToday;
     }
     
     public int sendGift(String giftType) {
         checkGiftQuotaReset();
->>>>>>> ArtGTR
         
         if (selectedCharacter.isEmpty()) {
             System.out.println("[GameLogic] ERROR: ยังไม่ได้เลือกตัวละคร!");
@@ -234,22 +229,16 @@ public class GameLogic {
         }
         
         if (!spendMoney(cost)) {
-<<<<<<< HEAD
             return 1; // เงินไม่พอ
-=======
             return 1;
->>>>>>> ArtGTR
         }
         
         addAffection(affectionGain);
         giftQuotaToday--;
         
         System.out.println("[GameLogic] ส่งของขวัญ " + giftType + " สำเร็จ! ความชอบ+" + affectionGain + " โควต้าเหลือ: " + giftQuotaToday);
-<<<<<<< HEAD
         return 0; // สำเร็จ
-=======
         return 0;
->>>>>>> ArtGTR
     }
     
     public int getGiftCheapCost() { return GIFT_CHEAP_COST; }
@@ -260,14 +249,11 @@ public class GameLogic {
     // ระบบงาน
     // ========================================
     
-<<<<<<< HEAD
     /**
      * รีเซ็ตจำนวนครั้งทำงานถ้าเป็นวันใหม่
      */
     private void checkWorkReset() {
-=======
     public void checkWorkReset() {
->>>>>>> ArtGTR
         LocalDate today = LocalDate.now();
         if (!today.equals(lastWorkResetDate)) {
             workCountToday = 0;
@@ -277,11 +263,7 @@ public class GameLogic {
     }
     
     public int getWorkCountToday() {
-<<<<<<< HEAD
-
-=======
         checkWorkReset();
->>>>>>> ArtGTR
         return workCountToday;
     }
     
@@ -289,17 +271,14 @@ public class GameLogic {
         return MAX_WORK_PER_DAY;
     }
     
-<<<<<<< HEAD
     /**
      * ทำงาน - ใช้พลังงาน 20 ได้เงิน 100
      * คืนค่า: 0=สำเร็จ, 1=พลังงานไม่พอ, 2=ทำงานครบวันนี้แล้ว
      */
     public int work() {
 
-=======
     public int work() {
         checkWorkReset();
->>>>>>> ArtGTR
         
         if (workCountToday >= MAX_WORK_PER_DAY) {
             System.out.println("[GameLogic] ทำงานครบแล้ววันนี้! (" + workCountToday + "/" + MAX_WORK_PER_DAY + ")");
@@ -310,40 +289,31 @@ public class GameLogic {
         int moneyGain = 100;
         
         if (!useEnergy(energyCost)) {
-<<<<<<< HEAD
             return 1; // พลังงานไม่พอ
-=======
             return 1;
->>>>>>> ArtGTR
         }
         
         addMoney(moneyGain);
         workCountToday++;
         
         System.out.println("[GameLogic] ทำงานสำเร็จ! ได้เงิน +" + moneyGain + " ทำงานไปแล้ว: " + workCountToday + "/" + MAX_WORK_PER_DAY);
-<<<<<<< HEAD
         return 0; // สำเร็จ
-=======
         return 0;
->>>>>>> ArtGTR
     }
     
     // ========================================
     // ฟังก์ชันสำหรับ UI แสดงข้อมูล
     // ========================================
     
-<<<<<<< HEAD
     /**
      * ดึงข้อมูลสถานะทั้งหมดเป็น String
      */
     public String getStatusText() {
 
 
-=======
     public String getStatusText() {
         checkGiftQuotaReset();
         checkWorkReset();
->>>>>>> ArtGTR
         
         return String.format(
             "💰 เงิน: %d บาท | ⚡ พลังงาน: %d/%d | 💝 ความชอบ: %d/100\n🎁 ของขวัญวันนี้: %d/3 | 💼 ทำงาน: %d/5",

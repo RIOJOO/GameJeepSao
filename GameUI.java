@@ -10,16 +10,12 @@ public class GameUI {
     private CardLayout cardLayout;
     private JPanel mainContainer;
 
-<<<<<<< HEAD
-=======
     // ตัวแปรระบบเนื้อเรื่อง
->>>>>>> ArtGTR
     private List<Dialogue> currentStory;
     private int currentStep = 0;
     private JLabel dialogLabel, speakerLabel, characterSprite, bgLabel;
     private JPanel choicePanel;
 
-<<<<<<< HEAD
     private JLabel moneyLabel, affectionLabel, energyLabel, dateLabel;
     private Home homePanel;
     private JPanel menuPopup;
@@ -29,10 +25,8 @@ public class GameUI {
         "Jan","Feb","Mar","Apr","May","Jun",
         "Jul","Aug","Sep","Oct","Nov","Dec"
     };
-=======
     // Status Bar
     private JLabel statusLabel;
->>>>>>> ArtGTR
 
     public GameUI(GameLogic logic) {
         System.setProperty("sun.java2d.uiScale", "1.0");
@@ -40,11 +34,8 @@ public class GameUI {
         initWindow();
     }
 
-<<<<<<< HEAD
     public void initWindow() {
-=======
     private void initWindow() {
->>>>>>> ArtGTR
         frame = new JFrame("FirstLove - เกมจีบสาว");
         frame.setSize(1200, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,19 +48,15 @@ public class GameUI {
         mainContainer.add(createMenuPanel(), "MENU");
         mainContainer.add(new CharacterSelect(cardLayout, mainContainer, logic), "CHAR_SELECT");
         mainContainer.add(createGameplayPanel(), "GAMEPLAY");
-<<<<<<< HEAD
         mainContainer.add(new WorkGame_ui(cardLayout, mainContainer, logic), "WORK");
         mainContainer.add(new Shop_ui(cardLayout, mainContainer, logic), "SHOP");
         homePanel = new Home(cardLayout, mainContainer, logic, gameDate, this::updateStatus);
         mainContainer.add(homePanel, "HOME");
         mainContainer.add(new MultiplayerLobby(cardLayout, mainContainer), "MULTI");
-=======
->>>>>>> ArtGTR
 
         frame.add(mainContainer);
     }
 
-<<<<<<< HEAD
     // ─── หน้าเมนูหลัก ───────────────────────────────────────────────────────
     public JPanel createMenuPanel() {
         JPanel p = new JPanel(null);
@@ -172,7 +159,6 @@ public class GameUI {
         mainPanel.add(menuBg);
 
         mainPanel.setComponentZOrder(menuBg, mainPanel.getComponentCount() - 1);
->>>>>>> ArtGTR
 
         p.add(title); p.add(startBtn); p.add(settingsBtn);
         p.add(loadBtn); p.add(multiBtn); p.add(exitBtn); p.add(bg);
@@ -180,7 +166,6 @@ public class GameUI {
         return p;
     }
 
-<<<<<<< HEAD
     // ─── หน้าเล่นเกม ────────────────────────────────────────────────────────
     public JPanel createGameplayPanel() {
         JPanel panel = new JPanel(null);
@@ -276,7 +261,6 @@ public class GameUI {
         menuPopup.setBounds((1200 - popW) / 2, (800 - popH) / 2, popW, popH);
 
         // Speaker + Dialog
-=======
     // --- หน้าจอเล่นเกม (Gameplay) ---
     private JPanel createGameplayPanel() {
         JPanel panel = new JPanel(null);
@@ -299,7 +283,6 @@ public class GameUI {
         choicePanel.setVisible(false);
 
         // 3. ชื่อผู้พูด
->>>>>>> ArtGTR
         speakerLabel = new JLabel("");
         speakerLabel.setBounds(50, 560, 200, 40);
         speakerLabel.setOpaque(true);
@@ -312,7 +295,6 @@ public class GameUI {
         dialogLabel = new JLabel("", SwingConstants.CENTER);
         dialogLabel.setBounds(50, 600, 1100, 130);
         dialogLabel.setOpaque(true);
-<<<<<<< HEAD
         dialogLabel.setBackground(new Color(255, 255, 255, 180));
         dialogLabel.setFont(new Font("Tahoma", Font.PLAIN, 24));
         dialogLabel.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 3));
@@ -322,7 +304,6 @@ public class GameUI {
         choicePanel.setBounds(300, 150, 600, 350);
         choicePanel.setOpaque(false);
         choicePanel.setVisible(false);
-=======
         dialogLabel.setBackground(new Color(255, 255, 255, 220));
         dialogLabel.setFont(new Font("Tahoma", Font.PLAIN, 24));
         dialogLabel.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 3));
@@ -331,7 +312,6 @@ public class GameUI {
         characterSprite = new JLabel();
         characterSprite.setBounds(0, 0, 1200, 800);
         characterSprite.setHorizontalAlignment(SwingConstants.CENTER);
->>>>>>> ArtGTR
 
         // เพิ่มและจัดเลเยอร์ (index 0 = หน้าสุด)
         panel.add(menuPopup);
@@ -352,7 +332,6 @@ public class GameUI {
         panel.setComponentZOrder(characterSprite, 6);
         panel.setComponentZOrder(bgLabel,         7);
 
-<<<<<<< HEAD
         // คลิกทั่วไปเดินเรื่อง / ปิด menu ถ้าเปิดอยู่
         MouseAdapter click = new MouseAdapter() {
             @Override public void mouseClicked(MouseEvent e) {
@@ -369,7 +348,6 @@ public class GameUI {
 
         panel.addComponentListener(new ComponentAdapter() {
             @Override public void componentShown(ComponentEvent e) {
-=======
         // คลิกเพื่อไปต่อ
         MouseAdapter clickHandler = new MouseAdapter() {
             @Override
@@ -383,7 +361,6 @@ public class GameUI {
         panel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
->>>>>>> ArtGTR
                 startNewStory();
                 updateStatus();
             }
@@ -392,7 +369,6 @@ public class GameUI {
         return panel;
     }
 
-<<<<<<< HEAD
     // ─── HUD update ─────────────────────────────────────────────────────────
     public void updateStatus() {
         if (logic == null) return;
@@ -435,13 +411,11 @@ public class GameUI {
         btn.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 2));
         btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-=======
     // ฟังก์ชันอัปเดตสถานะจาก Logic
     private void updateStatus() {
         if (logic != null && statusLabel != null) {
             statusLabel.setText(logic.getStatusText());
         }
->>>>>>> ArtGTR
     }
 
     private void updateImageLayer(JLabel label, String path, int w, int h) {
@@ -461,7 +435,6 @@ public class GameUI {
         }
     }
 
-<<<<<<< HEAD
     // ─── เนื้อเรื่อง ─────────────────────────────────────────────────────────
     public void startNewStory() {
         String c = logic.getSelectedCharacter();
@@ -496,7 +469,6 @@ public class GameUI {
         }
 
         if (d.choices != null && d.choices.length > 0) {
-=======
     private void startNewStory() {
         String selected = logic.getSelectedCharacter();
         currentStep = 0;
@@ -552,7 +524,6 @@ public class GameUI {
         if (d.choices != null && d.choices.length > 0) {
             if (d.nextSteps == null)
                 d.nextSteps = new int[d.choices.length];
->>>>>>> ArtGTR
             showChoices(d.choices, d.nextSteps, d.affectionGains);
         } else {
             currentStep++;
@@ -560,23 +531,17 @@ public class GameUI {
         }
     }
 
-<<<<<<< HEAD
-    public void showChoices(String[] choices, int[] nextSteps, int[] affectionGains) {
-=======
     private void showChoices(String[] choices, int[] nextSteps, int[] affectionGains) {
->>>>>>> ArtGTR
         choicePanel.removeAll();
         choicePanel.setVisible(true);
 
         for (int i = 0; i < choices.length; i++) {
             JButton btn = new JButton(choices[i]);
             styleButton(btn);
-<<<<<<< HEAD
             final int target = (i < nextSteps.length) ? nextSteps[i] : currentStep + 1;
             final int gain   = (affectionGains != null && i < affectionGains.length) ? affectionGains[i] : 0;
             btn.addActionListener(e -> {
                 if (gain != 0) logic.addAffection(gain);
-=======
 
             final int target = (nextSteps != null && i < nextSteps.length)
                     ? nextSteps[i] : currentStep + 1;
@@ -586,7 +551,6 @@ public class GameUI {
 
             btn.addActionListener(e -> {
                 if (affGain != 0) logic.addAffection(affGain);
->>>>>>> ArtGTR
                 updateStatus();
                 currentStep = target;
                 choicePanel.setVisible(false);
@@ -600,7 +564,6 @@ public class GameUI {
         choicePanel.repaint();
     }
 
-<<<<<<< HEAD
 
     // ─── ปฏิทิน Popup ───────────────────────────────────────────────────────
     private void showCalendarPopup() {
@@ -724,7 +687,6 @@ public class GameUI {
 
     public void show() { frame.setVisible(true); }
 }
-=======
     private void styleButton(JButton btn) {
         btn.setFont(new Font("Tahoma", Font.BOLD, 22));
         btn.setBackground(Color.WHITE);
@@ -736,4 +698,3 @@ public class GameUI {
 
     public void show() { frame.setVisible(true); }
 }
->>>>>>> ArtGTR
