@@ -202,7 +202,7 @@ public class GameLogic {
     }
     
     public int getGiftQuota() {
-        checkGiftQuotaReset();
+
         return giftQuotaToday;
     }
     
@@ -211,7 +211,7 @@ public class GameLogic {
      * คืนค่า: 0=สำเร็จ, 1=เงินไม่พอ, 2=โควต้าหมด, 3=ไม่มีตัวละครที่เลือก
      */
     public int sendGift(String giftType) {
-        checkGiftQuotaReset();
+
         
         if (selectedCharacter.isEmpty()) {
             System.out.println("[GameLogic] ERROR: ยังไม่ได้เลือกตัวละคร!");
@@ -276,7 +276,7 @@ public class GameLogic {
     }
     
     public int getWorkCountToday() {
-        checkWorkReset();
+
         return workCountToday;
     }
     
@@ -289,7 +289,7 @@ public class GameLogic {
      * คืนค่า: 0=สำเร็จ, 1=พลังงานไม่พอ, 2=ทำงานครบวันนี้แล้ว
      */
     public int work() {
-        checkWorkReset();
+
         
         if (workCountToday >= MAX_WORK_PER_DAY) {
             System.out.println("[GameLogic] ทำงานครบแล้ววันนี้! (" + workCountToday + "/" + MAX_WORK_PER_DAY + ")");
@@ -318,8 +318,8 @@ public class GameLogic {
      * ดึงข้อมูลสถานะทั้งหมดเป็น String
      */
     public String getStatusText() {
-        checkGiftQuotaReset();
-        checkWorkReset();
+
+
         
         return String.format(
             "💰 เงิน: %d บาท | ⚡ พลังงาน: %d/%d | 💝 ความชอบ: %d/100\n🎁 ของขวัญวันนี้: %d/3 | 💼 ทำงาน: %d/5",
@@ -342,5 +342,14 @@ public class GameLogic {
         System.out.println("โควต้าของขวัญ: " + giftQuotaToday + "/3");
         System.out.println("ทำงาน: " + workCountToday + "/" + MAX_WORK_PER_DAY);
         System.out.println("================================\n");
+    }
+
+    // ── Setters สำหรับ Load Game ──
+    public void setMoney(int amount)   { this.money = amount; }
+    public void setEnergy(int amount)  { this.energy = Math.min(amount, MAX_ENERGY); }
+    public void setAffection(int amount) {
+        if      ("มีน".equals(selectedCharacter))   affectionMean  = amount;
+        else if ("พลอย".equals(selectedCharacter))  affectionPloy  = amount;
+        else if ("ลิลลี่".equals(selectedCharacter)) affectionLilli = amount;
     }
 }
