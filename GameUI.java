@@ -18,6 +18,8 @@ public class GameUI {
 
     // HUD labels
     private JLabel moneyLabel, affectionLabel, energyLabel;
+    private JPanel hudLeft, hudRight;
+    private boolean hudVisible = true;
 
     public GameUI(GameLogic logic) {
         System.setProperty("sun.java2d.uiScale", "1.0");
@@ -96,7 +98,7 @@ public class GameUI {
         panel.setBackground(Color.BLACK);
 
         // ── HUD กรอบซ้าย: เงิน | ความชอบ | พลังงาน ──
-        JPanel hudLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 7));
+        hudLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 7));
         hudLeft.setOpaque(true);
         hudLeft.setBackground(new Color(15, 15, 15, 200));
         hudLeft.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 2, true));
@@ -120,7 +122,7 @@ public class GameUI {
         hudLeft.add(energyLabel);
 
         // ── HUD กรอบขวา: ปุ่ม Job | Shop ──
-        JPanel hudRight = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 7));
+        hudRight = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 7));
         hudRight.setOpaque(true);
         hudRight.setBackground(new Color(15, 15, 15, 200));
         hudRight.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 2, true));
@@ -164,7 +166,24 @@ public class GameUI {
         bgLabel = new JLabel();
         bgLabel.setBounds(0, 0, 1200, 800);
 
+        // ── ปุ่ม toggle HUD (มุมบนขวาสุด) ──
+        JButton toggleBtn = new JButton("📊");
+        toggleBtn.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
+        toggleBtn.setBackground(new Color(30, 30, 30));
+        toggleBtn.setForeground(new Color(255, 105, 180));
+        toggleBtn.setBorder(BorderFactory.createLineBorder(new Color(255, 105, 180), 2, true));
+        toggleBtn.setFocusPainted(false);
+        toggleBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        toggleBtn.setToolTipText("แสดง/ซ่อน HUD");
+        toggleBtn.setBounds(1162, 8, 30, 46);
+        toggleBtn.addActionListener(e -> {
+            hudVisible = !hudVisible;
+            hudLeft.setVisible(hudVisible);
+            hudRight.setVisible(hudVisible);
+        });
+
         // ── เพิ่มและจัดเลเยอร์ ──
+        panel.add(toggleBtn);
         panel.add(hudLeft);
         panel.add(hudRight);
         panel.add(choicePanel);
@@ -173,13 +192,14 @@ public class GameUI {
         panel.add(characterSprite);
         panel.add(bgLabel);
 
-        panel.setComponentZOrder(hudLeft,         0);
-        panel.setComponentZOrder(hudRight,        1);
-        panel.setComponentZOrder(choicePanel,     2);
-        panel.setComponentZOrder(speakerLabel,    3);
-        panel.setComponentZOrder(dialogLabel,     4);
-        panel.setComponentZOrder(characterSprite, 5);
-        panel.setComponentZOrder(bgLabel,         6);
+        panel.setComponentZOrder(toggleBtn,       0);
+        panel.setComponentZOrder(hudLeft,         1);
+        panel.setComponentZOrder(hudRight,        2);
+        panel.setComponentZOrder(choicePanel,     3);
+        panel.setComponentZOrder(speakerLabel,    4);
+        panel.setComponentZOrder(dialogLabel,     5);
+        panel.setComponentZOrder(characterSprite, 6);
+        panel.setComponentZOrder(bgLabel,         7);
 
         // คลิกเพื่อไปต่อ
         MouseAdapter clickHandler = new MouseAdapter() {
