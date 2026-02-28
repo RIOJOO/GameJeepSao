@@ -2,6 +2,7 @@ import java.util.*;
 
 public class MeanStory {
 
+<<<<<<< HEAD
     public static List<Dialogue> getStory() {
 
         List<Dialogue> story = new ArrayList<>();
@@ -87,8 +88,215 @@ public class MeanStory {
                 "SYSTEM",
                 "\uD83D\uDE42 FRIEND ENDING \uD83D\uDE42",
                 "res/FriendEnding.png"
+=======
+    public static void main(String[] args) {
+        GameEngine engine = new GameEngine(createStory());
+        engine.start();
+    }
+
+    /* ===========================
+       Story
+    =========================== */
+    private static List<Dialogue> createStory() {
+
+        List<Dialogue> story = new ArrayList<>();
+
+        story.add(new Dialogue(
+                "บรรยาย",
+                "วันแรกของการเปิดเทอม มีนเดินเข้าห้องสมุดเพื่อหามุมเงียบ ๆ"
+        ));
+
+        story.add(new Dialogue(
+                "SYSTEM",
+                "🌸 ใครจะเข้าไปช่วยมีนหยิบหนังสือ?",
+                Arrays.asList(
+                        new Choice("ภีมช่วยหยิบให้แบบสุภาพ", "PHIM", 10),
+                        new Choice("เซนเดินไปแหย่แล้วหยิบให้", "ZEN", 10),
+                        new Choice("เรย์หยิบให้เงียบ ๆ แล้วส่งให้", "RAY", 10)
+                )
+        ));
+
+        story.add(new Dialogue(
+                "มีน",
+                "“ขอบคุณนะคะ… ดีจังที่มีคนช่วย”"
+        ));
+
+        story.add(new Dialogue(
+                "SYSTEM",
+                "🌸 มีนชวนไปนั่งอ่านด้วยกัน",
+                Arrays.asList(
+                        new Choice("ภีมนั่งอ่านข้าง ๆ แบบเงียบ ๆ", "PHIM", 15),
+                        new Choice("เซนชวนคุยเรื่องตลกเบา ๆ", "ZEN", 15),
+                        new Choice("เรย์แนะนำหนังสือดี ๆ ให้", "RAY", 15)
+                )
+        ));
+
+        story.add(new Dialogue(
+                "SYSTEM",
+                "🌸 ก่อนกลับบ้าน มีนยิ้มให้",
+                Arrays.asList(
+                        new Choice("ภีมบอกว่า ดีใจที่ได้เจอเธอ", "PHIM", 20),
+                        new Choice("เซนบอกว่า คราวหน้ามาอีกนะ", "ZEN", 20),
+                        new Choice("เรย์พูดเบา ๆ ว่า ระวังตัวนะ", "RAY", 20)
+                )
+>>>>>>> script
         ));
 
         return Collections.unmodifiableList(story);
     }
+<<<<<<< HEAD
+=======
+
+    /* ===========================
+       Game Engine
+    =========================== */
+    static class GameEngine {
+
+        private final List<Dialogue> story;
+        private final Scanner scanner = new Scanner(System.in);
+
+        private int lovePhim = 0;
+        private int loveZen = 0;
+        private int loveRay = 0;
+
+        private int currentIndex = 0;
+
+        public GameEngine(List<Dialogue> story) {
+            this.story = story;
+        }
+
+        public void start() {
+
+            while (currentIndex < story.size()) {
+
+                Dialogue current = story.get(currentIndex);
+
+                System.out.println("\n----------------------------------");
+                System.out.println("[" + current.getSpeaker() + "]");
+                System.out.println(current.getText());
+
+                if (current.hasChoices()) {
+
+                    List<Choice> choices = current.getChoices();
+
+                    for (int i = 0; i < choices.size(); i++) {
+                        System.out.println((i + 1) + ". " + choices.get(i).getText());
+                    }
+
+                    System.out.print("เลือก: ");
+                    int input = scanner.nextInt();
+
+                    if (input < 1 || input > choices.size()) {
+                        System.out.println("เลือกใหม่อีกครั้งนะคะ");
+                        continue;
+                    }
+
+                    Choice selected = choices.get(input - 1);
+                    addScore(selected.getTarget(), selected.getScore());
+                }
+
+                currentIndex++;
+            }
+
+            ending();
+        }
+
+        private void addScore(String target, int score) {
+            switch (target) {
+                case "PHIM":
+                    lovePhim += score;
+                    break;
+                case "ZEN":
+                    loveZen += score;
+                    break;
+                case "RAY":
+                    loveRay += score;
+                    break;
+            }
+        }
+
+        private void ending() {
+
+            System.out.println("\n========== ตอนจบ ==========");
+
+            if (lovePhim > loveZen && lovePhim > loveRay) {
+                phimEnding();
+            } else if (loveZen > lovePhim && loveZen > loveRay) {
+                zenEnding();
+            } else {
+                rayEnding();
+            }
+
+            System.out.println("\nจบเกม 💛");
+        }
+
+        private void phimEnding() {
+            System.out.println("💖 มีนเลือกภีม 💖");
+            System.out.println("ภีม: \"เราจะอยู่ข้างเธอแบบนี้ทุกวันเลยนะ\"");
+            System.out.println("มีนยิ้มอบอุ่นในมุมห้องสมุด");
+        }
+
+        private void zenEnding() {
+            System.out.println("🔥 มีนเลือกเซน 🔥");
+            System.out.println("เซน: \"เห็นไหม อยู่กับเราสนุกสุดแล้ว\"");
+            System.out.println("เสียงหัวเราะเบา ๆ ดังในห้องสมุด");
+        }
+
+        private void rayEnding() {
+            System.out.println("🌙 มีนเลือกเรย์ 🌙");
+            System.out.println("เรย์: \"เราอาจไม่พูดมาก…แต่เราจริงใจ\"");
+            System.out.println("มีนพยักหน้าช้า ๆ อย่างมั่นใจ");
+        }
+    }
+
+    /* ===========================
+       Dialogue
+    =========================== */
+    static class Dialogue {
+
+        private final String speaker;
+        private final String text;
+        private final List<Choice> choices;
+
+        public Dialogue(String speaker, String text) {
+            this(speaker, text, new ArrayList<>());
+        }
+
+        public Dialogue(String speaker, String text, List<Choice> choices) {
+            this.speaker = speaker;
+            this.text = text;
+            this.choices = choices != null
+                    ? Collections.unmodifiableList(choices)
+                    : new ArrayList<>();
+        }
+
+        public String getSpeaker() { return speaker; }
+        public String getText() { return text; }
+        public List<Choice> getChoices() { return choices; }
+
+        public boolean hasChoices() {
+            return !choices.isEmpty();
+        }
+    }
+
+    /* ===========================
+       Choice
+    =========================== */
+    static class Choice {
+
+        private final String text;
+        private final String target;
+        private final int score;
+
+        public Choice(String text, String target, int score) {
+            this.text = text;
+            this.target = target;
+            this.score = score;
+        }
+
+        public String getText() { return text; }
+        public String getTarget() { return target; }
+        public int getScore() { return score; }
+    }
+>>>>>>> script
 }
