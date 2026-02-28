@@ -9,7 +9,7 @@ public class GameLogic {
     private final int MAX_ENERGY = 100;
     
     // ========== ระบบเงิน ==========
-    private int money = 500; // เริ่มต้น 500 บาท
+    private int money = 500;
     
     // ========== ระบบความชอบ (แยกตามตัวละคร) ==========
     private int affectionMean = 0;
@@ -18,18 +18,18 @@ public class GameLogic {
     private final int MAX_AFFECTION = 100;
     
     // ========== ระบบของขวัญ (จำกัดต่อวัน) ==========
-    private int giftQuotaToday = 3; // ส่งได้ 3 ครั้ง/วัน
+    private int giftQuotaToday = 3;
     private LocalDate lastGiftResetDate = LocalDate.now();
     
     // ========== ระบบงาน (จำกัดต่อวัน) ==========
     private int workCountToday = 0;
-    private final int MAX_WORK_PER_DAY = 5; // ทำงานได้ 5 ครั้ง/วัน
+    private final int MAX_WORK_PER_DAY = 5;
     private LocalDate lastWorkResetDate = LocalDate.now();
     
     // ========== ราคาของขวัญ ==========
-    private final int GIFT_CHEAP_COST = 50;      // ของถูก +5 ความชอบ
-    private final int GIFT_NORMAL_COST = 150;    // ของปกติ +15 ความชอบ
-    private final int GIFT_EXPENSIVE_COST = 500; // ของแพง +50 ความชอบ
+    private final int GIFT_CHEAP_COST = 50;
+    private final int GIFT_NORMAL_COST = 150;
+    private final int GIFT_EXPENSIVE_COST = 500;
     
     // ========== Constructor ==========
     public GameLogic() {
@@ -65,9 +65,6 @@ public class GameLogic {
         return energy >= amount;
     }
     
-    /**
-     * ใช้พลังงาน - คืนค่า true ถ้าพลังงานพอ
-     */
     public boolean useEnergy(int amount) {
         if (energy >= amount) {
             energy -= amount;
@@ -79,18 +76,12 @@ public class GameLogic {
         return false;
     }
     
-    /**
-     * เพิ่มพลังงาน
-     */
     public void restoreEnergy(int amount) {
         energy += amount;
         if (energy > MAX_ENERGY) energy = MAX_ENERGY;
         System.out.println("[GameLogic] ฟื้นฟูพลังงาน +" + amount + " เป็น: " + energy);
     }
     
-    /**
-     * นอนพักผ่อน - รีพลังงานเต็ม
-     */
     public void sleep() {
         energy = MAX_ENERGY;
         System.out.println("[GameLogic] นอนพักผ่อน - พลังงานเต็ม: " + MAX_ENERGY);
@@ -108,9 +99,6 @@ public class GameLogic {
         return money >= amount;
     }
     
-    /**
-     * ใช้เงิน - คืนค่า true ถ้าเงินพอ
-     */
     public boolean spendMoney(int amount) {
         if (money >= amount) {
             money -= amount;
@@ -121,9 +109,6 @@ public class GameLogic {
         return false;
     }
     
-    /**
-     * เพิ่มเงิน
-     */
     public void addMoney(int amount) {
         money += amount;
         System.out.println("[GameLogic] ได้รับเงิน +" + amount + " รวม: " + money);
@@ -133,37 +118,31 @@ public class GameLogic {
     // ระบบความชอบ
     // ========================================
     
-    /**
-     * ดูค่าความชอบของตัวละครที่เลือกอยู่
-     */
     public int getCurrentAffection() {
         switch (selectedCharacter) {
             case "มีน": return affectionMean;
             case "พลอย": return affectionPloy;
-            case "พี่ลิลลี่": return affectionLilli;
+            case "ลิลลี่": return affectionLilli;
             default: return 0;
         }
     }
     
-    /**
-     * เพิ่มค่าความชอบให้ตัวละครที่เลือกอยู่
-     */
     public void addAffection(int amount) {
         String oldChar = selectedCharacter;
         int oldValue = getCurrentAffection();
         
         switch (selectedCharacter) {
-            case "มีน": 
+            case "มีน":
                 affectionMean += amount;
                 if (affectionMean > MAX_AFFECTION) affectionMean = MAX_AFFECTION;
                 if (affectionMean < 0) affectionMean = 0;
                 break;
-            case "พลอย": 
+            case "พลอย":
                 affectionPloy += amount;
                 if (affectionPloy > MAX_AFFECTION) affectionPloy = MAX_AFFECTION;
                 if (affectionPloy < 0) affectionPloy = 0;
                 break;
-            case "พี่ลิลลี่": 
+            case "ลิลลี่":
                 affectionLilli += amount;
                 if (affectionLilli > MAX_AFFECTION) affectionLilli = MAX_AFFECTION;
                 if (affectionLilli < 0) affectionLilli = 0;
@@ -173,14 +152,11 @@ public class GameLogic {
         System.out.println("[GameLogic] ความชอบ " + oldChar + ": " + oldValue + " -> " + getCurrentAffection());
     }
     
-    /**
-     * ดูค่าความชอบของตัวละครที่ระบุ
-     */
     public int getAffection(String characterName) {
         switch (characterName) {
             case "มีน": return affectionMean;
             case "พลอย": return affectionPloy;
-            case "พี่ลิลลี่": return affectionLilli;
+            case "ลิลลี่": return affectionLilli;
             default: return 0;
         }
     }
@@ -189,10 +165,14 @@ public class GameLogic {
     // ระบบของขวัญ
     // ========================================
     
+<<<<<<< HEAD
     /**
      * รีเซ็ตโควต้าของขวัญถ้าเป็นวันใหม่
      */
     private void checkGiftQuotaReset() {
+=======
+    public void checkGiftQuotaReset() {
+>>>>>>> ArtGTR
         LocalDate today = LocalDate.now();
         if (!today.equals(lastGiftResetDate)) {
             giftQuotaToday = 3;
@@ -202,6 +182,7 @@ public class GameLogic {
     }
     
     public int getGiftQuota() {
+<<<<<<< HEAD
 
         return giftQuotaToday;
     }
@@ -212,6 +193,14 @@ public class GameLogic {
      */
     public int sendGift(String giftType) {
 
+=======
+        checkGiftQuotaReset();
+        return giftQuotaToday;
+    }
+    
+    public int sendGift(String giftType) {
+        checkGiftQuotaReset();
+>>>>>>> ArtGTR
         
         if (selectedCharacter.isEmpty()) {
             System.out.println("[GameLogic] ERROR: ยังไม่ได้เลือกตัวละคร!");
@@ -245,14 +234,22 @@ public class GameLogic {
         }
         
         if (!spendMoney(cost)) {
+<<<<<<< HEAD
             return 1; // เงินไม่พอ
+=======
+            return 1;
+>>>>>>> ArtGTR
         }
         
         addAffection(affectionGain);
         giftQuotaToday--;
         
         System.out.println("[GameLogic] ส่งของขวัญ " + giftType + " สำเร็จ! ความชอบ+" + affectionGain + " โควต้าเหลือ: " + giftQuotaToday);
+<<<<<<< HEAD
         return 0; // สำเร็จ
+=======
+        return 0;
+>>>>>>> ArtGTR
     }
     
     public int getGiftCheapCost() { return GIFT_CHEAP_COST; }
@@ -263,10 +260,14 @@ public class GameLogic {
     // ระบบงาน
     // ========================================
     
+<<<<<<< HEAD
     /**
      * รีเซ็ตจำนวนครั้งทำงานถ้าเป็นวันใหม่
      */
     private void checkWorkReset() {
+=======
+    public void checkWorkReset() {
+>>>>>>> ArtGTR
         LocalDate today = LocalDate.now();
         if (!today.equals(lastWorkResetDate)) {
             workCountToday = 0;
@@ -276,7 +277,11 @@ public class GameLogic {
     }
     
     public int getWorkCountToday() {
+<<<<<<< HEAD
 
+=======
+        checkWorkReset();
+>>>>>>> ArtGTR
         return workCountToday;
     }
     
@@ -284,12 +289,17 @@ public class GameLogic {
         return MAX_WORK_PER_DAY;
     }
     
+<<<<<<< HEAD
     /**
      * ทำงาน - ใช้พลังงาน 20 ได้เงิน 100
      * คืนค่า: 0=สำเร็จ, 1=พลังงานไม่พอ, 2=ทำงานครบวันนี้แล้ว
      */
     public int work() {
 
+=======
+    public int work() {
+        checkWorkReset();
+>>>>>>> ArtGTR
         
         if (workCountToday >= MAX_WORK_PER_DAY) {
             System.out.println("[GameLogic] ทำงานครบแล้ววันนี้! (" + workCountToday + "/" + MAX_WORK_PER_DAY + ")");
@@ -300,37 +310,48 @@ public class GameLogic {
         int moneyGain = 100;
         
         if (!useEnergy(energyCost)) {
+<<<<<<< HEAD
             return 1; // พลังงานไม่พอ
+=======
+            return 1;
+>>>>>>> ArtGTR
         }
         
         addMoney(moneyGain);
         workCountToday++;
         
         System.out.println("[GameLogic] ทำงานสำเร็จ! ได้เงิน +" + moneyGain + " ทำงานไปแล้ว: " + workCountToday + "/" + MAX_WORK_PER_DAY);
+<<<<<<< HEAD
         return 0; // สำเร็จ
+=======
+        return 0;
+>>>>>>> ArtGTR
     }
     
     // ========================================
     // ฟังก์ชันสำหรับ UI แสดงข้อมูล
     // ========================================
     
+<<<<<<< HEAD
     /**
      * ดึงข้อมูลสถานะทั้งหมดเป็น String
      */
     public String getStatusText() {
 
 
+=======
+    public String getStatusText() {
+        checkGiftQuotaReset();
+        checkWorkReset();
+>>>>>>> ArtGTR
         
         return String.format(
             "💰 เงิน: %d บาท | ⚡ พลังงาน: %d/%d | 💝 ความชอบ: %d/100\n🎁 ของขวัญวันนี้: %d/3 | 💼 ทำงาน: %d/5",
-            money, energy, MAX_ENERGY, getCurrentAffection(), 
+            money, energy, MAX_ENERGY, getCurrentAffection(),
             giftQuotaToday, workCountToday
         );
     }
     
-    /**
-     * Debug - แสดงข้อมูลทั้งหมด
-     */
     public void printDebugInfo() {
         System.out.println("\n========== DEBUG INFO ==========");
         System.out.println("ตัวละครที่เลือก: " + selectedCharacter);
